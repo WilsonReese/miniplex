@@ -11,4 +11,11 @@
 #  user_id       :integer
 #
 class TicketRequest < ApplicationRecord
+  belongs_to(:user, { :required => false, :class_name => "User", :foreign_key => "user_id" })
+  belongs_to(:group, { :required => false, :class_name => "GroupReservation", :foreign_key => "group_id" })
+
+  has_one(:theater, { :through => :group, :source => :theater })
+  has_one(:movie, { :through => :group, :source => :movie })
+
+  validates(:group_id, { :presence => true })
 end

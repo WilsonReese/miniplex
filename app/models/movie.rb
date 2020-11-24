@@ -11,4 +11,11 @@
 #  updated_at        :datetime         not null
 #
 class Movie < ApplicationRecord
+  has_many(:group_reservations, { :class_name => "GroupReservation", :foreign_key => "movie_id", :dependent => :nullify })
+
+  has_many(:theaters, { :through => :group_reservations, :source => :theater })
+  has_many(:ticket_requests, { :through => :group_reservations, :source => :ticket_requests })
+
+  validates(:title, { :presence => true })
+  validates(:duration, { :presence => true })
 end

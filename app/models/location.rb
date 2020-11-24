@@ -9,4 +9,5 @@
 #  updated_at     :datetime         not null
 #
 class Location < ApplicationRecord
+  has_many(:theaters, { :class_name => "Theater", :foreign_key => "location_id", :dependent => :destroy })
 end

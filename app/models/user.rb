@@ -17,4 +17,7 @@ class User < ApplicationRecord
   validates :email, :uniqueness => { :case_sensitive => false }
   validates :email, :presence => true
   has_secure_password
+
+  has_many(:ticket_requests, { :class_name => "TicketRequest", :foreign_key => "user_id", :dependent => :destroy })
+  has_many(:groups, { :through => :ticket_requests, :source => :group })
 end
