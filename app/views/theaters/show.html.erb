@@ -1,0 +1,101 @@
+<div>
+  <div>
+    <h1>
+      Theater #<%= @the_theater.id %> details
+    </h1>
+
+    <div>
+      <div>
+        <a href="/theaters">
+          Go back
+        </a>
+      </div>
+
+      <div>
+        <a href="/delete_theater/<%= @the_theater.id %>">
+          Delete theater
+        </a>
+      </div>
+    </div>
+
+    <dl>
+      <dt>
+        Seats in theater
+      </dt>
+      <dd>
+        <%= @the_theater.seats_in_theater %>
+      </dd>
+
+      <dt>
+        Location
+      </dt>
+      <dd>
+        <%= @the_theater.location_id %>
+      </dd>
+
+      <dt>
+        Turnover time
+      </dt>
+      <dd>
+        <%= @the_theater.turnover_time %>
+      </dd>
+
+      <dt>
+        Created at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_theater.created_at) %> ago
+      </dd>
+
+      <dt>
+        Updated at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_theater.updated_at) %> ago
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<hr>
+
+
+<div>
+  <div>
+    <h2>
+      Edit theater
+    </h2>
+
+    <form action="/modify_theater/<%= @the_theater.id %>"  method="post" >
+      <div>
+        <label for="seats_in_theater_box">
+          Seats in theater
+        </label>
+
+        <input type="text" id="seats_in_theater_box" name="query_seats_in_theater" value="<%= @the_theater.seats_in_theater %>">
+      </div>
+
+      <div>
+        <label for="location_id_box">
+          Location
+        </label>
+
+        <input type="text" id="location_id_box" name="query_location_id" value="<%= @the_theater.location_id %>">
+      </div>
+
+      <div>
+        <label for="turnover_time_box">
+          Turnover time
+        </label>
+
+        <input type="text" id="turnover_time_box" name="query_turnover_time" value="<%= @the_theater.turnover_time %>">
+      </div>
+
+      <button>
+        Update theater
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>

@@ -2,6 +2,25 @@ Rails.application.routes.draw do
 
 
 
+  # Routes for the Theater resource:
+
+  # CREATE
+  post("/insert_theater", { :controller => "theaters", :action => "create" })
+          
+  # READ
+  get("/theaters", { :controller => "theaters", :action => "index" })
+  
+  get("/theaters/:path_id", { :controller => "theaters", :action => "show" })
+  
+  # UPDATE
+  
+  post("/modify_theater/:path_id", { :controller => "theaters", :action => "update" })
+  
+  # DELETE
+  get("/delete_theater/:path_id", { :controller => "theaters", :action => "destroy" })
+
+  #------------------------------
+
   # Routes for the User account:
 
   # SIGN UP FORM

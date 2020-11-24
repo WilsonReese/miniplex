@@ -1,0 +1,118 @@
+<div>
+  <div>
+    <h1>
+      List of all theaters
+    </h1>
+  </div>
+</div>
+
+<hr>
+
+<div>
+  <div>
+    <h2>
+      Add a new theater
+    </h2>
+
+    <form action="/insert_theater" method="post">
+      <div>
+        <label for="seats_in_theater_box">
+          Seats in theater
+        </label>
+
+        <input type="text" id="seats_in_theater_box" name="query_seats_in_theater">
+      </div>
+
+      <div>
+        <label for="location_id_box">
+          Location
+        </label>
+
+        <input type="text" id="location_id_box" name="query_location_id">
+      </div>
+
+      <div>
+        <label for="turnover_time_box">
+          Turnover time
+        </label>
+
+        <input type="text" id="turnover_time_box" name="query_turnover_time">
+      </div>
+
+      <button>
+        Create theater
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>
+<div>
+  <div>
+    <table>
+      <tr>
+        <th>
+          ID
+        </th>
+
+        <th>
+          Seats in theater
+        </th>
+
+        <th>
+          Location
+        </th>
+
+        <th>
+          Turnover time
+        </th>
+
+        <th>
+          Created at
+        </th>
+
+        <th>
+          Updated at
+        </th>
+
+        <th>
+        </th>
+      </tr>
+
+      <% @list_of_theaters.each do |a_theater| %>
+      <tr>
+        <td>
+          <%= a_theater.id %>
+        </td>
+
+        <td>
+          <%= a_theater.seats_in_theater %>
+        </td>
+
+        <td>
+          <%= a_theater.location_id %>
+        </td>
+
+        <td>
+          <%= a_theater.turnover_time %>
+        </td>
+
+        <td>
+          <%= time_ago_in_words(a_theater.created_at) %> ago
+        </td>
+        <td>
+          <%= time_ago_in_words(a_theater.updated_at) %> ago
+        </td>
+
+        <td>
+          <a href="/theaters/<%= a_theater.id %>">
+            Show details
+          </a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<hr>
