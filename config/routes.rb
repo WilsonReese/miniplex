@@ -2,6 +2,25 @@ Rails.application.routes.draw do
 
 
 
+  # Routes for the Group reservation resource:
+
+  # CREATE
+  post("/insert_group_reservation", { :controller => "group_reservations", :action => "create" })
+          
+  # READ
+  get("/group_reservations", { :controller => "group_reservations", :action => "index" })
+  
+  get("/group_reservations/:path_id", { :controller => "group_reservations", :action => "show" })
+  
+  # UPDATE
+  
+  post("/modify_group_reservation/:path_id", { :controller => "group_reservations", :action => "update" })
+  
+  # DELETE
+  get("/delete_group_reservation/:path_id", { :controller => "group_reservations", :action => "destroy" })
+
+  #------------------------------
+
   # Routes for the Location resource:
 
   # CREATE

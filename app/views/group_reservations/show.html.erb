@@ -1,0 +1,161 @@
+<div>
+  <div>
+    <h1>
+      Group reservation #<%= @the_group_reservation.id %> details
+    </h1>
+
+    <div>
+      <div>
+        <a href="/group_reservations">
+          Go back
+        </a>
+      </div>
+
+      <div>
+        <a href="/delete_group_reservation/<%= @the_group_reservation.id %>">
+          Delete group reservation
+        </a>
+      </div>
+    </div>
+
+    <dl>
+      <dt>
+        Reservation status
+      </dt>
+      <dd>
+        <%= @the_group_reservation.reservation_status %>
+      </dd>
+
+      <dt>
+        Reservation date
+      </dt>
+      <dd>
+        <%= @the_group_reservation.reservation_date %>
+      </dd>
+
+      <dt>
+        Reservation time
+      </dt>
+      <dd>
+        <%= @the_group_reservation.reservation_time %>
+      </dd>
+
+      <dt>
+        Reservation duration
+      </dt>
+      <dd>
+        <%= @the_group_reservation.reservation_duration %>
+      </dd>
+
+      <dt>
+        Number of tickets
+      </dt>
+      <dd>
+        <%= @the_group_reservation.number_of_tickets %>
+      </dd>
+
+      <dt>
+        Movie
+      </dt>
+      <dd>
+        <%= @the_group_reservation.movie_id %>
+      </dd>
+
+      <dt>
+        Theater
+      </dt>
+      <dd>
+        <%= @the_group_reservation.theater_id %>
+      </dd>
+
+      <dt>
+        Created at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_group_reservation.created_at) %> ago
+      </dd>
+
+      <dt>
+        Updated at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_group_reservation.updated_at) %> ago
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<hr>
+
+
+<div>
+  <div>
+    <h2>
+      Edit group reservation
+    </h2>
+
+    <form action="/modify_group_reservation/<%= @the_group_reservation.id %>"  method="post" >
+      <div>
+        <label for="reservation_status_box">
+          Reservation status
+        </label>
+
+        <input type="text" id="reservation_status_box" name="query_reservation_status" value="<%= @the_group_reservation.reservation_status %>">
+      </div>
+
+      <div>
+        <label for="reservation_date_box">
+          Reservation date
+        </label>
+
+        <input type="date" id="reservation_date_box" name="query_reservation_date" value="<%= @the_group_reservation.reservation_date %>">
+      </div>
+
+      <div>
+        <label for="reservation_time_box">
+          Reservation time
+        </label>
+
+        <input type="time" id="reservation_time_box" name="query_reservation_time" value="<%= @the_group_reservation.reservation_time %>">
+      </div>
+
+      <div>
+        <label for="reservation_duration_box">
+          Reservation duration
+        </label>
+
+        <input type="text" id="reservation_duration_box" name="query_reservation_duration" value="<%= @the_group_reservation.reservation_duration %>">
+      </div>
+
+      <div>
+        <label for="number_of_tickets_box">
+          Number of tickets
+        </label>
+
+        <input type="text" id="number_of_tickets_box" name="query_number_of_tickets" value="<%= @the_group_reservation.number_of_tickets %>">
+      </div>
+
+      <div>
+        <label for="movie_id_box">
+          Movie
+        </label>
+
+        <input type="text" id="movie_id_box" name="query_movie_id" value="<%= @the_group_reservation.movie_id %>">
+      </div>
+
+      <div>
+        <label for="theater_id_box">
+          Theater
+        </label>
+
+        <input type="text" id="theater_id_box" name="query_theater_id" value="<%= @the_group_reservation.theater_id %>">
+      </div>
+
+      <button>
+        Update group reservation
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>

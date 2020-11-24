@@ -1,0 +1,2 @@
+class GroupReservation < ApplicationRecord
+end
