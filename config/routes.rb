@@ -2,6 +2,25 @@ Rails.application.routes.draw do
 
 
 
+  # Routes for the Location resource:
+
+  # CREATE
+  post("/insert_location", { :controller => "locations", :action => "create" })
+          
+  # READ
+  get("/locations", { :controller => "locations", :action => "index" })
+  
+  get("/locations/:path_id", { :controller => "locations", :action => "show" })
+  
+  # UPDATE
+  
+  post("/modify_location/:path_id", { :controller => "locations", :action => "update" })
+  
+  # DELETE
+  get("/delete_location/:path_id", { :controller => "locations", :action => "destroy" })
+
+  #------------------------------
+
   # Routes for the Movie resource:
 
   # CREATE
