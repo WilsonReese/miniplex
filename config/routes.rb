@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
-
+  # HOME
+  get("/", { :controller => "movies", :action => "index" })
 
   # Routes for the Ticket request resource:
 
