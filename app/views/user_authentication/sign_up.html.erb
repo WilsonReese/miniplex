@@ -1,0 +1,58 @@
+<h1>Sign up</h1>
+
+<form action="/insert_user" method="post">
+
+  <div>
+    <label for="email_box">Email</label>
+    <input id="email_box" name="query_email" placeholder="Choose a email..." type="text">
+  </div>
+                 
+  <div>
+    <label for="phone_number_box">Phone number</label>
+      
+    <input type="text" id="phone_number_box" name="query_phone_number">
+  </div>
+         
+  <div>
+    <label for="street_address_box">Street address</label>
+      
+    <input type="text" id="street_address_box" name="query_street_address">
+  </div>
+         
+  <div>
+    <label for="city_box">City</label>
+      
+    <input type="text" id="city_box" name="query_city">
+  </div>
+         
+  <div>
+    <label for="zip_code_box">Zip code</label>
+      
+    <input type="text" id="zip_code_box" name="query_zip_code">
+  </div>
+         
+  <div>
+    <label for="admin_box">Admin</label>
+    <input id="admin_box" name="query_admin" type="checkbox">
+  </div>
+    
+  <div>
+    <label for="password_box">Password</label>
+    <input id="password_box" name="query_password" placeholder="Choose a password..." type="password">
+  </div>
+
+  <div>
+    <label for="password_confirmation_box">Password Confirmation</label>
+    <input id="password_confirmation_box" name="query_password_confirmation" placeholder="Confirm your password..." type="password">
+  </div>
+
+  <button>
+    Sign up
+  </button>
+</form>
+
+<hr>
+
+<p>
+  Or, <a href="/user_sign_in">Sign in</a> instead.
+</p>
