@@ -1,0 +1,134 @@
+<div>
+  <div>
+    <h1>
+      List of all ticket requests
+    </h1>
+  </div>
+</div>
+
+<hr>
+
+<div>
+  <div>
+    <h2>
+      Add a new ticket request
+    </h2>
+
+    <form action="/insert_ticket_request" method="post">
+      <div>
+        <label for="user_id_box">
+          User
+        </label>
+
+        <input type="text" id="user_id_box" name="query_user_id">
+      </div>
+
+      <div>
+        <label for="group_id_box">
+          Group
+        </label>
+
+        <input type="text" id="group_id_box" name="query_group_id">
+      </div>
+
+      <div>
+        <label for="ticket_status_box">
+          Ticket status
+        </label>
+
+        <input type="text" id="ticket_status_box" name="query_ticket_status">
+      </div>
+
+      <div>
+        <label for="ticket_box">
+          Ticket
+        </label>
+
+        <input type="text" id="ticket_box" name="query_ticket">
+      </div>
+
+      <button>
+        Create ticket request
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>
+<div>
+  <div>
+    <table>
+      <tr>
+        <th>
+          ID
+        </th>
+
+        <th>
+          User
+        </th>
+
+        <th>
+          Group
+        </th>
+
+        <th>
+          Ticket status
+        </th>
+
+        <th>
+          Ticket
+        </th>
+
+        <th>
+          Created at
+        </th>
+
+        <th>
+          Updated at
+        </th>
+
+        <th>
+        </th>
+      </tr>
+
+      <% @list_of_ticket_requests.each do |a_ticket_request| %>
+      <tr>
+        <td>
+          <%= a_ticket_request.id %>
+        </td>
+
+        <td>
+          <%= a_ticket_request.user_id %>
+        </td>
+
+        <td>
+          <%= a_ticket_request.group_id %>
+        </td>
+
+        <td>
+          <%= a_ticket_request.ticket_status %>
+        </td>
+
+        <td>
+          <%= a_ticket_request.ticket %>
+        </td>
+
+        <td>
+          <%= time_ago_in_words(a_ticket_request.created_at) %> ago
+        </td>
+        <td>
+          <%= time_ago_in_words(a_ticket_request.updated_at) %> ago
+        </td>
+
+        <td>
+          <a href="/ticket_requests/<%= a_ticket_request.id %>">
+            Show details
+          </a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<hr>

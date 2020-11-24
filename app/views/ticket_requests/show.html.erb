@@ -1,0 +1,116 @@
+<div>
+  <div>
+    <h1>
+      Ticket request #<%= @the_ticket_request.id %> details
+    </h1>
+
+    <div>
+      <div>
+        <a href="/ticket_requests">
+          Go back
+        </a>
+      </div>
+
+      <div>
+        <a href="/delete_ticket_request/<%= @the_ticket_request.id %>">
+          Delete ticket request
+        </a>
+      </div>
+    </div>
+
+    <dl>
+      <dt>
+        User
+      </dt>
+      <dd>
+        <%= @the_ticket_request.user_id %>
+      </dd>
+
+      <dt>
+        Group
+      </dt>
+      <dd>
+        <%= @the_ticket_request.group_id %>
+      </dd>
+
+      <dt>
+        Ticket status
+      </dt>
+      <dd>
+        <%= @the_ticket_request.ticket_status %>
+      </dd>
+
+      <dt>
+        Ticket
+      </dt>
+      <dd>
+        <%= @the_ticket_request.ticket %>
+      </dd>
+
+      <dt>
+        Created at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_ticket_request.created_at) %> ago
+      </dd>
+
+      <dt>
+        Updated at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_ticket_request.updated_at) %> ago
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<hr>
+
+
+<div>
+  <div>
+    <h2>
+      Edit ticket request
+    </h2>
+
+    <form action="/modify_ticket_request/<%= @the_ticket_request.id %>"  method="post" >
+      <div>
+        <label for="user_id_box">
+          User
+        </label>
+
+        <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_ticket_request.user_id %>">
+      </div>
+
+      <div>
+        <label for="group_id_box">
+          Group
+        </label>
+
+        <input type="text" id="group_id_box" name="query_group_id" value="<%= @the_ticket_request.group_id %>">
+      </div>
+
+      <div>
+        <label for="ticket_status_box">
+          Ticket status
+        </label>
+
+        <input type="text" id="ticket_status_box" name="query_ticket_status" value="<%= @the_ticket_request.ticket_status %>">
+      </div>
+
+      <div>
+        <label for="ticket_box">
+          Ticket
+        </label>
+
+        <input type="text" id="ticket_box" name="query_ticket" value="<%= @the_ticket_request.ticket %>">
+      </div>
+
+      <button>
+        Update ticket request
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>

@@ -2,6 +2,25 @@ Rails.application.routes.draw do
 
 
 
+  # Routes for the Ticket request resource:
+
+  # CREATE
+  post("/insert_ticket_request", { :controller => "ticket_requests", :action => "create" })
+          
+  # READ
+  get("/ticket_requests", { :controller => "ticket_requests", :action => "index" })
+  
+  get("/ticket_requests/:path_id", { :controller => "ticket_requests", :action => "show" })
+  
+  # UPDATE
+  
+  post("/modify_ticket_request/:path_id", { :controller => "ticket_requests", :action => "update" })
+  
+  # DELETE
+  get("/delete_ticket_request/:path_id", { :controller => "ticket_requests", :action => "destroy" })
+
+  #------------------------------
+
   # Routes for the Group reservation resource:
 
   # CREATE
