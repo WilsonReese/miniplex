@@ -1,56 +1,58 @@
 <div>
   <div>
     <h1>
-      List of all movies
+      Current Showings
     </h1>
   </div>
 </div>
 
-<hr>
-
-<div>
-  <div>
-    <h2>
-      Add a new movie
-    </h2>
-
-    <form action="/insert_movie" method="post">
+<% if @current_user != nil %>
+  <% if @current_user.admin == true %>
+    <hr>
+    <div>
       <div>
-        <label for="title_box">
-          Title
-        </label>
+        <h2>
+          Add a new movie
+        </h2>
+        <form action="/insert_movie" method="post">
+          <div>
+            <label for="title_box">
+              Title
+            </label>
 
-        <input type="text" id="title_box" name="query_title">
+            <input type="text" id="title_box" name="query_title">
+          </div>
+
+          <div>
+            <label for="duration_box">
+              Duration
+            </label>
+
+            <input type="text" id="duration_box" name="query_duration">
+          </div>
+
+          <div>
+            <label for="description_box">
+              Description
+            </label>
+
+            <textarea id="description_box" name="query_description" rows="3"></textarea>
+          </div>
+
+          <div>
+            <input type="checkbox" id="currently_showing_box" name="query_currently_showing" value="1">
+
+            <label for="currently_showing_box">Currently showing</label>
+          </div>
+
+          <button>
+            Create movie
+          </button>
+        </form>
       </div>
-
-      <div>
-        <label for="duration_box">
-          Duration
-        </label>
-
-        <input type="text" id="duration_box" name="query_duration">
-      </div>
-
-      <div>
-        <label for="description_box">
-          Description
-        </label>
-
-        <textarea id="description_box" name="query_description" rows="3"></textarea>
-      </div>
-
-      <div>
-        <input type="checkbox" id="currently_showing_box" name="query_currently_showing" value="1">
-
-        <label for="currently_showing_box">Currently showing</label>
-      </div>
-
-      <button>
-        Create movie
-      </button>
-    </form>
-  </div>
-</div>
+    </div>
+  <% end %>
+<% end %>
 
 <hr>
 <div>
