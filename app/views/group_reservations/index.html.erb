@@ -1,182 +1,159 @@
-<div>
+<% if @current_user == nil %>
+  <h4>Please <a href="/user_sign_in">sign in</a> first</h4>
+<% else %>
   <div>
-    <h1>
-      List of all group reservations
-    </h1>
+    <div>
+      <h1>
+        List of all group reservations - users have to sign in to get to/past this point
+      </h1>
+    </div>
   </div>
-</div>
-
-<hr>
-
-<div>
+  <hr>
   <div>
-    <h2>
-      Add a new group reservation
-    </h2>
-
-    <form action="/insert_group_reservation" method="post">
-      <div>
-        <label for="reservation_status_box">
-          Reservation status
-        </label>
-
-        <input type="text" id="reservation_status_box" name="query_reservation_status">
-      </div>
-
-      <div>
-        <label for="reservation_date_box">
-          Reservation date
-        </label>
-
-        <input type="date" id="reservation_date_box" name="query_reservation_date">
-      </div>
-
-      <div>
-        <label for="reservation_time_box">
-          Reservation time
-        </label>
-
-        <input type="time" id="reservation_time_box" name="query_reservation_time">
-      </div>
-
-      <div>
-        <label for="reservation_duration_box">
-          Reservation duration
-        </label>
-
-        <input type="text" id="reservation_duration_box" name="query_reservation_duration">
-      </div>
-
-      <div>
-        <label for="number_of_tickets_box">
-          Number of tickets
-        </label>
-
-        <input type="text" id="number_of_tickets_box" name="query_number_of_tickets">
-      </div>
-
-      <div>
-        <label for="movie_id_box">
-          Movie
-        </label>
-
-        <input type="text" id="movie_id_box" name="query_movie_id">
-      </div>
-
-      <div>
-        <label for="theater_id_box">
-          Theater
-        </label>
-
-        <input type="text" id="theater_id_box" name="query_theater_id">
-      </div>
-
-      <button>
-        Create group reservation
-      </button>
-    </form>
+    <div>
+      <h2>
+        Add a new group reservation
+      </h2>
+      <form action="/insert_group_reservation" method="post">
+        <div>
+          <label for="reservation_date_box">
+            Pick a day
+          </label>
+          <input type="date" id="reservation_date_box" name="query_reservation_date">
+        </div>
+        <div>
+          <label for="reservation_time_box">
+            Pick a time
+          </label>
+          <input type="time" id="reservation_time_box" name="query_reservation_time">
+        </div>
+        <div>
+          <label for="reservation_duration_box">
+            Reservation duration
+          </label>
+          <input type="text" id="reservation_duration_box" name="query_reservation_duration">
+        </div>
+        <div>
+          <label for="number_of_tickets_box">
+            Number of tickets
+          </label>
+          <select type="text" id="number_of_tickets_box" name="query_number_of_tickets">
+            <% max_seats_in_theaters = 0 %>
+            <% Theater.all.each do |theater| %>
+              <% if theater.seats_in_theater > max_seats_in_theaters %>
+                <% max_seats_in_theaters = theater.seats_in_theater %>
+              <% end %>
+            <% end %>
+            <% count = 1 %>
+            <% max_seats_in_theaters.times do %>
+              <option><%= count %></option>
+              <% count = count + 1 %>
+            <% end %>
+          </select>
+        </div>
+        <div>
+          <label for="movie_id_box">
+            Movie
+          </label>
+          <select type="text" id="movie_id_box" name="query_movie_id">
+            <% Movie.all.each do |a_movie| %>
+              <% if a_movie.currently_showing == true %>
+                <option><%= a_movie.title %></option>
+              <% end %>
+            <% end %>
+          </select>
+        </div>
+        <div>
+          <label for="theater_id_box">
+            Theater
+          </label>
+          <input type="text" id="theater_id_box" name="query_theater_id">
+        </div>
+        <button>
+          Create group reservation
+        </button>
+      </form>
+    </div>
   </div>
-</div>
-
-<hr>
-<div>
+  <hr>
   <div>
-    <table>
-      <tr>
-        <th>
-          ID
-        </th>
-
-        <th>
-          Reservation status
-        </th>
-
-        <th>
-          Reservation date
-        </th>
-
-        <th>
-          Reservation time
-        </th>
-
-        <th>
-          Reservation duration
-        </th>
-
-        <th>
-          Number of tickets
-        </th>
-
-        <th>
-          Movie
-        </th>
-
-        <th>
-          Theater
-        </th>
-
-        <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
-        </th>
-
-        <th>
-        </th>
-      </tr>
-
-      <% @list_of_group_reservations.each do |a_group_reservation| %>
-      <tr>
-        <td>
-          <%= a_group_reservation.id %>
-        </td>
-
-        <td>
-          <%= a_group_reservation.reservation_status %>
-        </td>
-
-        <td>
-          <%= a_group_reservation.reservation_date %>
-        </td>
-
-        <td>
-          <%= a_group_reservation.reservation_time %>
-        </td>
-
-        <td>
-          <%= a_group_reservation.reservation_duration %>
-        </td>
-
-        <td>
-          <%= a_group_reservation.number_of_tickets %>
-        </td>
-
-        <td>
-          <%= a_group_reservation.movie_id %>
-        </td>
-
-        <td>
-          <%= a_group_reservation.theater_id %>
-        </td>
-
-        <td>
-          <%= time_ago_in_words(a_group_reservation.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(a_group_reservation.updated_at) %> ago
-        </td>
-
-        <td>
-          <a href="/group_reservations/<%= a_group_reservation.id %>">
-            Show details
-          </a>
-        </td>
-      </tr>
-      <% end %>
-    </table>
+    <div>
+      <table>
+        <tr>
+          <th>
+            ID
+          </th>
+          <th>
+            Reservation status
+          </th>
+          <th>
+            Reservation date
+          </th>
+          <th>
+            Reservation time
+          </th>
+          <th>
+            Reservation duration
+          </th>
+          <th>
+            Number of tickets
+          </th>
+          <th>
+            Movie
+          </th>
+          <th>
+            Theater
+          </th>
+          <th>
+            Created at
+          </th>
+          <th>
+            Updated at
+          </th>
+          <th>
+          </th>
+        </tr>
+        <% @list_of_group_reservations.each do |a_group_reservation| %>
+          <tr>
+            <td>
+              <%= a_group_reservation.id %>
+            </td>
+            <td>
+              <%= a_group_reservation.reservation_status %>
+            </td>
+            <td>
+              <%= a_group_reservation.reservation_date %>
+            </td>
+            <td>
+              <%= a_group_reservation.reservation_time %>
+            </td>
+            <td>
+              <%= a_group_reservation.reservation_duration %>
+            </td>
+            <td>
+              <%= a_group_reservation.number_of_tickets %>
+            </td>
+            <td>
+              <%= a_group_reservation.movie_id %>
+            </td>
+            <td>
+              <%= a_group_reservation.theater_id %>
+            </td>
+            <td>
+              <%= time_ago_in_words(a_group_reservation.created_at) %> ago
+            </td>
+            <td>
+              <%= time_ago_in_words(a_group_reservation.updated_at) %> ago
+            </td>
+            <td>
+              <a href="/group_reservations/<%= a_group_reservation.id %>">
+                Show details
+              </a>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
   </div>
-</div>
-
-<hr>
+  <hr>
+<% end %>

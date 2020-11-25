@@ -20,19 +20,25 @@ class GroupReservationsController < ApplicationController
   def create
     the_group_reservation = GroupReservation.new
     #status defaults to requested, not a user input
-    the_group_reservation.reservation_status = params.fetch("query_reservation_status")
+    the_group_reservation.reservation_status = "requested"
 
     #chosen by user
     the_group_reservation.reservation_date = params.fetch("query_reservation_date")
     the_group_reservation.reservation_time = params.fetch("query_reservation_time")
     the_group_reservation.number_of_tickets = params.fetch("query_number_of_tickets")
+    
+    # movie needs to come from the previous click
     the_group_reservation.movie_id = params.fetch("query_movie_id")
+
+    # theater comes from availability
     the_group_reservation.theater_id = params.fetch("query_theater_id")
 
     #duration = movie.duration + theater.turnover_time
     the_group_reservation.reservation_duration = params.fetch("query_reservation_duration")
 
-    # if reservation is valid, reservation status becomes 
+    # need custom validation for if theater is available is open
+    # if theater is not open, we need to suggest new times, -- redirect to a new page? send an alert?
+    # if reservation is valid, reservation status becomes confirmed (calculates reservation duration, blocks off theater, sends tickets)
     if the_group_reservation.valid?
       the_group_reservation.save
       redirect_to("/group_reservations", { :notice => "Group reservation created successfully." })
