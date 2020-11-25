@@ -68,33 +68,12 @@
     <table>
       <tr>
         <th>
-          ID
+          Image
         </th>
 
         <th>
           Title
         </th>
-
-        <th>
-          Duration
-        </th>
-
-        <th>
-          Description
-        </th>
-
-        <th>
-          Currently showing
-        </th>
-
-        <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
-        </th>
-
         <th>
         </th>
       </tr>
@@ -102,30 +81,13 @@
       <% @list_of_movies.each do |a_movie| %>
       <tr>
         <td>
-          <%= a_movie.id %>
+          <a href="/movies/<%= a_movie.id %>">
+            <img src="<%= a_movie.image %>" class="img-responsive">
+          </a>
         </td>
 
         <td>
           <%= a_movie.title %>
-        </td>
-
-        <td>
-          <%= a_movie.duration %>
-        </td>
-
-        <td>
-          <%= a_movie.description %>
-        </td>
-
-        <td>
-          <%= a_movie.currently_showing %>
-        </td>
-
-        <td>
-          <%= time_ago_in_words(a_movie.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(a_movie.updated_at) %> ago
         </td>
 
         <td>
@@ -134,9 +96,6 @@
           </a>
         </td>
 
-        <td>
-          <img src="<%= a_movie.image %>" class="img-responsive">
-        </td>
       </tr>
       <% end %>
     </table>
