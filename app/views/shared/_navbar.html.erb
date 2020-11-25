@@ -10,6 +10,19 @@
 
     <div class="collapse navbar-collapse" id="collapsible-nav-links">
       <ul class="navbar-nav mr-auto">
+        <% if @current_user != nil %>
+          <% if @current_user.admin == true %>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Only for Admin</a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="/locations">Locations</a>
+                <a class="dropdown-item" href="theaters">Theaters</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Separated link</a>
+              </div>
+          <% end %>
+        <% end %>
         <li class="nav-item">
           <a class="nav-link" href="/movies">
             Movies
