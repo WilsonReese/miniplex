@@ -6,6 +6,7 @@
 #  currently_showing :boolean
 #  description       :text
 #  duration          :float
+#  image             :string
 #  title             :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
