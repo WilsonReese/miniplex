@@ -14,7 +14,7 @@
         <h2>
           Add a new movie
         </h2>
-        <form action="/insert_movie" method="post">
+        <form action="/insert_movie" method="post" class="form-horizontal" enctype="multipart/form-data">
           <div>
             <label for="title_box">
               Title
@@ -37,6 +37,14 @@
             </label>
 
             <textarea id="description_box" name="query_description" rows="3"></textarea>
+          </div>
+
+          <div>
+            <label for="image_box">
+              Image
+            </label>
+
+            <input type="file" id="image_box" name="image" class="form-control">
           </div>
 
           <div>

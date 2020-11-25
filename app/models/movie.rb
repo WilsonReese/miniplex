@@ -19,4 +19,6 @@ class Movie < ApplicationRecord
 
   validates(:title, { :presence => true })
   validates(:duration, { :presence => true })
+
+  mount_uploader :image, ImageUploader
 end

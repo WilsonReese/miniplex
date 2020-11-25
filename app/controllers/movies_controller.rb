@@ -23,6 +23,7 @@ class MoviesController < ApplicationController
     the_movie.duration = params.fetch("query_duration")
     the_movie.description = params.fetch("query_description")
     the_movie.currently_showing = params.fetch("query_currently_showing", false)
+    the_movie.image = params.fetch(:image)
 
     if the_movie.valid?
       the_movie.save
