@@ -23,15 +23,19 @@ class GroupReservationsController < ApplicationController
     the_group_reservation.reservation_status = "requested"
 
     #chosen by user
-    the_group_reservation.reservation_date = params.fetch("query_reservation_date")
-    the_group_reservation.reservation_time = params.fetch("query_reservation_time")
-    the_group_reservation.number_of_tickets = params.fetch("query_number_of_tickets")
+    res_target_date = params.fetch("query_reservation_date").to_date
+    res_target_time = params.fetch("query_reservation_time").to_time
+    res_target_size = params.fetch("query_number_of_tickets").to_i
+
+    # the_group_reservation.reservation_date = params.fetch("query_reservation_date")
+    # the_group_reservation.reservation_time = params.fetch("query_reservation_time")
+    # the_group_reservation.number_of_tickets = params.fetch("query_number_of_tickets")
     
     # movie needs to come from the previous click
     the_group_reservation.movie_id = params.fetch("query_movie_id")
     
     #duration = movie.duration + theater.turnover_time
-    the_group_reservation.reservation_duration = params.fetch("query_reservation_duration")
+    # the_group_reservation.reservation_duration = params.fetch("query_reservation_duration")
 
     # movie_duration = the_group_reservation.movie.duration
     movie_duration = Movie.where({ :id => the_group_reservation.movie_id }).first.duration
@@ -39,11 +43,13 @@ class GroupReservationsController < ApplicationController
     # theater comes from availability
     # the_group_reservation.theater_id = params.fetch("query_theater_id")
 
-    d = the_group_reservation.reservation_date
-    t = the_group_reservation.reservation_time
+    d = res_target_date
+    t = res_target_time
     new_reservation_datetime = DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec, t.zone)
     new_reservation_movie_end = new_reservation_datetime + movie_duration.minutes
     current_datetime = Time.now
+    new_res_duration = 0.0
+    new_res_theater = 0
     
     
     if new_reservation_datetime > current_datetime
@@ -52,47 +58,62 @@ class GroupReservationsController < ApplicationController
       # all of the reservations on a day in one theater, get whose end time is closest to start time and one whose start time is closest to end time
 
       Theater.all.each do |a_theater|
-        if the_group_reservation.number_of_tickets <= a_theater.seats_in_theater
+        if res_target_size <= a_theater.seats_in_theater
 
-          #need conditional for if there are no reservations
-          just_before = Time.new(d.year, d.month, d.day, 0, 0, 0, t.zone) # change this to earliest reservation time
-          just_after = Time.new(d.year, d.month, d.day, 23, 59, 59, t.zone) #last reservation time
+          if a_theater.group_reservations == nil
+            new_res_duration = movie_duration + a_theater.turnover_time
+            new_res_theater = a_theater.id
 
-          a_theater.group_reservations.where({ :reservation_date => the_group_reservation.reservation_date })
-          .each do |a_reservation|
-            a_res_diff = the_group_reservation.reservation_time.to_i - a_reservation.reservation_time.to_i
-            old_res_diff_before = the_group_reservation.reservation_time.to_i - just_before.to_i
-            if a_res_diff < old_res_diff_before && a_res_diff > 0
-              just_before = a_reservation.reservation_time
-            end
+            the_group_reservation.reservation_duration = new_res_duration
+            the_group_reservation.theater_id = new_res_theater
+            the_group_reservation.reservation_date = res_target_date
+            the_group_reservation.reservation_time = res_target_time
+            the_group_reservation.number_of_tickets = res_target_size
+          # if # only one reservation
+          else
+            #need conditional for if there are no reservations
+            just_before = Time.new(d.year, d.month, d.day, 0, 0, 0) # change this to earliest reservation time
+            just_after = Time.new(d.year, d.month, d.day, 23, 59, 59) #last reservation time
 
-            old_res_diff_after = the_group_reservation.reservation_time.to_i - just_after.to_i
-            if a_res_diff > old_res_diff_after && a_res_diff < 0
-              just_after = a_reservation.reservation_time
-            end 
-            #now i have just before and just after start times on the right dates for each theater
-            # check target start time against just_before and just_before + duration
-            # check target start time against just_after and just_after + duration
-            end_time_before = just_before + a_reservation.reservation_duration.minutes
-            end_time_after = just_after + a_reservation.reservation_duration.minutes
+            a_theater.group_reservations.where({ :reservation_date => res_target_date }).each do |a_reservation|
+              a_res_diff = res_target_time.to_i - a_reservation.reservation_time.to_i
+              old_res_diff_before = res_target_time.to_i - just_before.to_i
+              if a_res_diff < old_res_diff_before && a_res_diff > 0
+                just_before = a_reservation.reservation_time
+              end
 
-            new_reservation_end = new_reservation_movie_end + a_reservation.theater_id.turnover_time.minutes
+              old_res_diff_after = res_target_time.to_i - just_after.to_i
+              if a_res_diff > old_res_diff_after && a_res_diff < 0
+                just_after = a_reservation.reservation_time
+              end 
+              #now i have just before and just after start times on the right dates for each theater
+              # check target start time against just_before and just_before + duration
+              # check target start time against just_after and just_after + duration
+              end_time_before = just_before + a_reservation.reservation_duration.minutes
+              end_time_after = just_after + a_reservation.reservation_duration.minutes
 
-            if ((the_group_reservation.reservation_time >= just_before) && (the_group_reservation.reservation_time <= end_time_before)) || ((new_reservation_end >= just_after) && (new_reservation_end <= end_time_after))
-            else
-              the_group_reservation.reservation_duration = movie_duration + a_theater.turnover_time
-              the_group_reservation.theater_id = a_theater.id
+              new_reservation_end = new_reservation_movie_end + a_reservation.theater_id.turnover_time.minutes
+
+              if ((res_target_time >= just_before) && (res_target_time <= end_time_before)) || ((new_reservation_end >= just_after) && (new_reservation_end <= end_time_after))
+              else
+                new_res_duration = movie_duration + a_theater.turnover_time
+                new_res_theater = a_theater.id
+              end
             end
           end
-        
-
         end
       end
-      
+
+
     else
-      #This time has already passed!
+      redirect_to("/group_reservations", { :notice => "Group reservation failed to create successfully." })
     end
 
+    the_group_reservation.reservation_duration = new_res_duration
+    the_group_reservation.theater_id = new_res_theater
+    the_group_reservation.reservation_date = res_target_date
+    the_group_reservation.reservation_time = res_target_time
+    the_group_reservation.number_of_tickets = res_target_size
 
 
 

@@ -14,6 +14,6 @@ class Theater < ApplicationRecord
   belongs_to(:location, { :required => false, :class_name => "Location", :foreign_key => "location_id" })
 
   has_many(:movies, { :through => :group_reservations, :source => :movie })
-  has_many(:group_reservations, { :through => :group_reservations, :source => :ticket_requests })
+  # has_many(:group_reservations, { :through => :group_reservations, :source => :ticket_requests })
 
 end
