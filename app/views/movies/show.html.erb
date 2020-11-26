@@ -10,15 +10,101 @@
           Go back
         </a>
       </div>
+      <% if @current_user != nil %>
+        <% if @current_user.admin == true %>
+          <div>
+            <a href="/delete_movie/<%= @the_movie.id %>">
+              Delete movie
+            </a>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
 
+    <hr>
+
+    <div>
       <div>
-        <a href="/delete_movie/<%= @the_movie.id %>">
-          Delete movie
-        </a>
+        <h2>
+          Make a Reservation for <%= @the_movie.title %>
+        </h2>
+        <%# need to require date and time or else it doesn't work %>
+        <form action="/insert_group_reservation" method="post">
+          <div>
+            <label for="reservation_date_box">
+              Pick a day
+            </label>
+            <input type="date" id="reservation_date_box" name="query_reservation_date">
+          </div>
+          <div>
+            <label for="reservation_time_box">
+              Pick a time
+            </label>
+            <input type="time" id="reservation_time_box" name="query_reservation_time">
+          </div>
+          <div>
+            <label for="reservation_duration_box" hidden>
+              Reservation duration
+            </label>
+            <input type="text" id="reservation_duration_box" name="query_reservation_duration" hidden>
+          </div>
+          <div>
+            <label for="number_of_tickets_box">
+              Number of tickets
+            </label>
+            <select type="text" id="number_of_tickets_box" name="query_number_of_tickets">
+              <% max_seats_in_theaters = 0 %>
+              <% Theater.all.each do |theater| %>
+                <% if theater.seats_in_theater > max_seats_in_theaters %>
+                  <% max_seats_in_theaters = theater.seats_in_theater %>
+                <% end %>
+              <% end %>
+              <% count = 1 %>
+              <% max_seats_in_theaters.times do %>
+                <option><%= count %></option>
+                <% count = count + 1 %>
+              <% end %>
+            </select>
+          </div>
+          <div>
+            <label for="movie_id_box" hidden>
+              Movie
+            </label>
+            <input id="movie_id_box" name="query_movie_id" value="<%= @the_movie.id %>" hidden>
+          </div>
+          <!--
+          <div>
+            <label for="movie_id_box" hidden>
+              Movie
+            </label>
+            <select id="movie_id_box" name="query_movie_id" value="<% @the_movie.id %>">
+              <% Movie.all.each do |a_movie| %>
+                <% if a_movie.currently_showing == true %>
+                  <option><%= a_movie.title %></option>
+                <% end %>
+              <% end %>
+            </select>
+          </div>
+          <div>
+            <label for="theater_id_box" hidden>
+              Theater
+            </label>
+            <input type="text" id="theater_id_box" name="query_theater_id" hidden>
+          </div>
+          -->
+          <button>
+            Check Availability
+          </button>
+        </form>
       </div>
     </div>
 
+    <hr>
+
     <dl>
+      <dt>
+        <img src="<%= @the_movie.image %>">
+      </dt>
       <dt>
         Title
       </dt>
@@ -30,7 +116,7 @@
         Duration
       </dt>
       <dd>
-        <%= @the_movie.duration %>
+        <%= @the_movie.duration.to_i %> minutes
       </dd>
 
       <dt>
@@ -66,51 +152,54 @@
 
 <hr>
 
-
-<div>
-  <div>
-    <h2>
-      Edit movie
-    </h2>
-
-    <form action="/modify_movie/<%= @the_movie.id %>"  method="post" >
+<% if @current_user != nil %>
+  <% if @current_user.admin == true %>
+    <div>
       <div>
-        <label for="title_box">
-          Title
-        </label>
+        <h2>
+          Edit movie
+        </h2>
 
-        <input type="text" id="title_box" name="query_title" value="<%= @the_movie.title %>">
+        <form action="/modify_movie/<%= @the_movie.id %>"  method="post" >
+          <div>
+            <label for="title_box">
+              Title
+            </label>
+
+            <input type="text" id="title_box" name="query_title" value="<%= @the_movie.title %>">
+          </div>
+
+          <div>
+            <label for="duration_box">
+              Duration
+            </label>
+
+            <input type="text" id="duration_box" name="query_duration" value="<%= @the_movie.duration %>">
+          </div>
+
+          <div>
+            <label for="description_box">
+              Description
+            </label>
+
+            <textarea id="description_box" name="query_description"><%= @the_movie.description %></textarea>
+          </div>
+
+          <div>
+            <input type="checkbox" id="currently_showing_box" name="query_currently_showing" value="1" <%= "checked" if @the_movie.currently_showing %>>
+
+            <label for="currently_showing_box">
+                Currently showing
+            </label>
+          </div>
+
+          <button>
+            Update movie
+          </button>
+        </form>
       </div>
+    </div>
+    <hr>
+  <% end %>
+<% end %>
 
-      <div>
-        <label for="duration_box">
-          Duration
-        </label>
-
-        <input type="text" id="duration_box" name="query_duration" value="<%= @the_movie.duration %>">
-      </div>
-
-      <div>
-        <label for="description_box">
-          Description
-        </label>
-
-        <textarea id="description_box" name="query_description"><%= @the_movie.description %></textarea>
-      </div>
-
-      <div>
-        <input type="checkbox" id="currently_showing_box" name="query_currently_showing" value="1" <%= "checked" if @the_movie.currently_showing %>>
-
-        <label for="currently_showing_box">
-            Currently showing
-        </label>
-      </div>
-
-      <button>
-        Update movie
-      </button>
-    </form>
-  </div>
-</div>
-
-<hr>
