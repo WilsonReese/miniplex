@@ -356,6 +356,8 @@ GEM
       unf_ext
     unf_ext (0.0.7.7)
     unicode-display_width (1.7.0)
+    validates_overlap (1.0.0)
+      rails (>= 6.0.0)
     warden (1.2.8)
       rack (>= 2.0.6)
     web-console (4.0.4)
@@ -410,6 +412,7 @@ DEPENDENCIES
   sprockets (< 4)
   sqlite3 (~> 1.4.1)
   table_print
+  validates_overlap
   web-console (>= 3.3.0)
   web_git!
   webmock

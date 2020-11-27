@@ -48,7 +48,8 @@ class GroupReservationsController < ApplicationController
     new_reservation_datetime = DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec, t.zone)
     new_reservation_movie_end = new_reservation_datetime + movie_duration.minutes
     current_datetime = Time.now
-    new_res_duration = 0.0
+    #need to remove this
+    new_res_duration = movie_duration
     new_res_theater = 0
     
     
@@ -60,7 +61,7 @@ class GroupReservationsController < ApplicationController
       Theater.all.each do |a_theater|
         if res_target_size <= a_theater.seats_in_theater
 
-          if a_theater.group_reservations == nil
+          if a_theater.group_reservations.first == nil
             new_res_duration = movie_duration + a_theater.turnover_time
             new_res_theater = a_theater.id
 
@@ -92,7 +93,7 @@ class GroupReservationsController < ApplicationController
               end_time_before = just_before + a_reservation.reservation_duration.minutes
               end_time_after = just_after + a_reservation.reservation_duration.minutes
 
-              new_reservation_end = new_reservation_movie_end + a_reservation.theater_id.turnover_time.minutes
+              new_reservation_end = new_reservation_movie_end + a_reservation.theater.turnover_time.minutes
 
               if ((res_target_time >= just_before) && (res_target_time <= end_time_before)) || ((new_reservation_end >= just_after) && (new_reservation_end <= end_time_after))
               else
@@ -101,20 +102,57 @@ class GroupReservationsController < ApplicationController
               end
             end
           end
+          
+          the_group_reservation.reservation_duration = new_res_duration
+          the_group_reservation.theater_id = new_res_theater
+          the_group_reservation.reservation_date = res_target_date
+          the_group_reservation.reservation_time = res_target_time
+          the_group_reservation.number_of_tickets = res_target_size
         end
       end
+    
 
 
     else
       redirect_to("/group_reservations", { :notice => "Group reservation failed to create successfully." })
     end
 
-    the_group_reservation.reservation_duration = new_res_duration
-    the_group_reservation.theater_id = new_res_theater
-    the_group_reservation.reservation_date = res_target_date
-    the_group_reservation.reservation_time = res_target_time
-    the_group_reservation.number_of_tickets = res_target_size
+    #need to update code - instead of using each for theaters, let's use a while statement, while a reservation is "requested"
+    if new_reservation_datetime > current_datetime # if reservation is in the future
+      
+      a_theater_position = 0 # starting array position
+      while the_group_reservation.reservation_status == "requested" # reservation is not confirmed
+        a_theater = Theater.all.at(a_theater_position) # get a theater in array of theaters
 
+        if res_target_size <= a_theater.seats_in_theater # if theater is big enough
+          
+          # reservations cannot overlap with new gem
+          if a_theater.group_reservations.count == 0
+            new_res_duration = movie_duration + a_theater.turnover_time
+            new_res_theater = a_theater.id
+
+            the_group_reservation.reservation_duration = new_res_duration
+            the_group_reservation.theater_id = new_res_theater
+            the_group_reservation.reservation_date = res_target_date
+            the_group_reservation.reservation_time = res_target_time
+            the_group_reservation.number_of_tickets = res_target_size
+          if a_theater.group_reservations.count == 1 
+            if a_theater.group_reservations.first.reservation_date  
+
+          end
+
+          just_before = Time.new(d.year, d.month, d.day, 0, 0, 0) # change this to earliest reservation time
+          just_after = Time.new(d.year, d.month, d.day, 23, 59, 59) #last reservation time
+
+        else # theater is not big enough
+          # need to move onto the next theater - add 1 to theater_position
+          # but if there are no theaters left to check, the reservation fails => count array of theaters 
+          
+        end 
+
+        a_theater_position += 1 #move to next position in array
+      end
+    end
 
 
 

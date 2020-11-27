@@ -25,4 +25,6 @@ class GroupReservation < ApplicationRecord
   validates(:reservation_date, { :presence => true })
   validates(:number_of_tickets, { :presence => true })
   validates(:movie_id, { :presence => true })
+  validates :starts_at, :ends_at, :overlap => true
+
 end
