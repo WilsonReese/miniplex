@@ -74,7 +74,8 @@ class GroupReservationsController < ApplicationController
               new_res_duration = movie_duration + a_theater.turnover_time
               new_res_theater = a_theater.id
               
-            elsif a_theater.group_reservations.where({ :reservation_date => res_target_date }).count > 0 
+            elsif a_theater.group_reservations.where({ :reservation_date => res_target_date }).count > 0
+              the_group_reservation.reservation_duration = movie_duration + a_theater.turnover_time
               a_theater.group_reservations.where({ :reservation_date => res_target_date }).each do |a_reservation|
                 if the_group_reservation.overlaps?(a_reservation) # if it overlaps
                   error_message = error_message + "[The time you selected] is unavailable in all theaters. "
@@ -88,7 +89,8 @@ class GroupReservationsController < ApplicationController
                   # then make it redirect to the same reservation page, with an error message and a slightly earlier and later start times suggestions
                   # when suggesting new times, we only want to look in theaters that are big enough
                   # make a suggested start time that equal target_time, it should automatically update target_end_time (start time+ duration)
-                  # check each minute earlier (for an hour) in a theater if it overlaps
+                  # check each minute earlier and later in a theater if it overlaps to get earlier time and later time
+                  
 
                 else # does not overlap
                   the_group_reservation.reservation_status = "available"

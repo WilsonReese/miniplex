@@ -30,7 +30,7 @@ class GroupReservation < ApplicationRecord
   # validates :starts_at, :ends_at, :overlap => true
 
   def overlaps?(other)
-    self.reservation_time <= other.reservation_end_time && other.reservation_time <= self.reservation_end_time
+    self.reservation_time < other.reservation_end_time && other.reservation_time < self.reservation_end_time
   end
 
   # scope :overlapping, -> { group_reservation
