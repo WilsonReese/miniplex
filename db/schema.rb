@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_25_001221) do
+ActiveRecord::Schema.define(version: 2020_11_27_202337) do
 
   create_table "group_reservations", force: :cascade do |t|
     t.string "reservation_status"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2020_11_25_001221) do
     t.integer "theater_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.time "reservation_end_time"
   end
 
   create_table "locations", force: :cascade do |t|

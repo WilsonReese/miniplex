@@ -6,6 +6,7 @@
 #  number_of_tickets    :integer
 #  reservation_date     :date
 #  reservation_duration :float
+#  reservation_end_time :time
 #  reservation_status   :string
 #  reservation_time     :time
 #  created_at           :datetime         not null
@@ -25,6 +26,15 @@ class GroupReservation < ApplicationRecord
   validates(:reservation_date, { :presence => true })
   validates(:number_of_tickets, { :presence => true })
   validates(:movie_id, { :presence => true })
-  validates :starts_at, :ends_at, :overlap => true
+  validates_presence_of :reservation_end_time
+  # validates :starts_at, :ends_at, :overlap => true
+
+  def overlaps?(other)
+    self.reservation_time <= other.reservation_end_time && other.reservation_time <= self.reservation_end_time
+  end
+
+  # scope :overlapping, -> { group_reservation
+  #   where("id <> ? AND reservation_time <= ? AND ? <= reservation_end_time", group_reservation.id, group_reservation.reservation_end_time, group_reservation.reservation_time)
+  # }
 
 end
