@@ -61,6 +61,8 @@ class GroupReservationsController < ApplicationController
     if new_reservation_datetime > current_datetime # if reservation is in the future
       
       a_theater_position = 0 # starting array position
+      theaters_unavailable = 0
+      theaters_too_small = 0
       while the_group_reservation.reservation_status == "requested" # reservation is not available
         if Theater.all.at(a_theater_position) == nil # if we have already checked all the theaters
           the_group_reservation.reservation_status = "failed" # break while loop
@@ -80,6 +82,8 @@ class GroupReservationsController < ApplicationController
                 if the_group_reservation.overlaps?(a_reservation) # if it overlaps
                   error_message = error_message + "[The time you selected] is unavailable in all theaters. "
                   
+                  theaters_unavailable += 1
+
                   # need to make this in conjunction with theater not big enough
                   # add 1 to "theaters_unavailable" 
                   # if theaters_unavailable + theaters_too_small == count of theaters && theaters_unavailable != count of theaters
@@ -102,8 +106,8 @@ class GroupReservationsController < ApplicationController
 
           else # theater is not big enough
             # check next theater
-            error_message = "There are no theaters available that seat " + res_target_size.to_s + " people. "
-            
+            theaters_too_small += 1
+
             # add 1 to "theaters_too_small"
             # need to count theaters that are not big enough to fit target_size => if there are any theaters that are not big enough, a different error message needs to be displayed => "The theaters large enough to seat X people are unavailable at TIME on DATE."
 
@@ -116,6 +120,17 @@ class GroupReservationsController < ApplicationController
         a_theater_position += 1 #move to next position in array
 
       end
+
+      count_of_theaters = Theater.where({ :location_id => 1 }).count
+      if theaters_unavailable + theaters_too_small == count_of_theaters
+        if theaters_unavailable != count_of_theaters
+          error_message = "There are no theaters available that seat #{res_target_size.to_s} people at #{res_target_time.strftime("%l:%M %p")}."
+        else
+          error_message = "There are no theaters available at #{res_target_time.strftime("%l:%M %p")}. <br> lets see if this works"
+        end
+
+      end
+
     else
       the_group_reservation.reservation_status = "failed"
       error_message = error_message + "Reservation must be in the future. "
@@ -144,79 +159,6 @@ class GroupReservationsController < ApplicationController
     end
     
     
-    # if new_reservation_datetime > current_datetime
-      
-    #   #need to get the closest reservations to current time
-    #   # all of the reservations on a day in one theater, get whose end time is closest to start time and one whose start time is closest to end time
-
-    #   Theater.all.each do |a_theater|
-    #     if res_target_size <= a_theater.seats_in_theater
-
-    #       if a_theater.group_reservations.first == nil
-    #         new_res_duration = movie_duration + a_theater.turnover_time
-    #         new_res_theater = a_theater.id
-
-    #         the_group_reservation.reservation_duration = new_res_duration
-    #         the_group_reservation.theater_id = new_res_theater
-    #         the_group_reservation.reservation_date = res_target_date
-    #         the_group_reservation.reservation_time = res_target_time
-    #         the_group_reservation.number_of_tickets = res_target_size
-    #       # if # only one reservation
-    #       else
-    #         #need conditional for if there are no reservations
-    #         just_before = Time.new(d.year, d.month, d.day, 0, 0, 0) # change this to earliest reservation time
-    #         just_after = Time.new(d.year, d.month, d.day, 23, 59, 59) #last reservation time
-
-    #         a_theater.group_reservations.where({ :reservation_date => res_target_date }).each do |a_reservation|
-    #           a_res_diff = res_target_time.to_i - a_reservation.reservation_time.to_i
-    #           old_res_diff_before = res_target_time.to_i - just_before.to_i
-    #           if a_res_diff < old_res_diff_before && a_res_diff > 0
-    #             just_before = a_reservation.reservation_time
-    #           end
-
-    #           old_res_diff_after = res_target_time.to_i - just_after.to_i
-    #           if a_res_diff > old_res_diff_after && a_res_diff < 0
-    #             just_after = a_reservation.reservation_time
-    #           end 
-    #           #now i have just before and just after start times on the right dates for each theater
-    #           # check target start time against just_before and just_before + duration
-    #           # check target start time against just_after and just_after + duration
-    #           end_time_before = just_before + a_reservation.reservation_duration.minutes
-    #           end_time_after = just_after + a_reservation.reservation_duration.minutes
-
-    #           new_reservation_end = new_reservation_movie_end + a_reservation.theater.turnover_time.minutes
-
-    #           if ((res_target_time >= just_before) && (res_target_time <= end_time_before)) || ((new_reservation_end >= just_after) && (new_reservation_end <= end_time_after))
-    #           else
-    #             new_res_duration = movie_duration + a_theater.turnover_time
-    #             new_res_theater = a_theater.id
-    #           end
-    #         end
-    #       end
-          
-    #       the_group_reservation.reservation_duration = new_res_duration
-    #       the_group_reservation.theater_id = new_res_theater
-    #       the_group_reservation.reservation_date = res_target_date
-    #       the_group_reservation.reservation_time = res_target_time
-    #       the_group_reservation.number_of_tickets = res_target_size
-    #     end
-    #   end
-    
-
-
-    # else
-    #   redirect_to("/group_reservations", { :notice => "Group reservation failed to create successfully." })
-    # end
-
-    # # need custom validation for if theater is available is open
-    # # if theater is not open, we need to suggest new times, -- redirect to a new page? send an alert?
-    # # if reservation is valid, reservation status becomes available (calculates reservation duration, blocks off theater, sends tickets)
-    # if the_group_reservation.valid?
-    #   the_group_reservation.save
-    #   redirect_to("/group_reservations", { :notice => "Group reservation created successfully." })
-    # else
-    #   redirect_to("/group_reservations", { :notice => "Group reservation failed to create successfully." })
-    # end
   end
 
   def update

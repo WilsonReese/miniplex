@@ -16,8 +16,5 @@ class Theater < ApplicationRecord
   has_many(:movies, { :through => :group_reservations, :source => :movie })
   # has_many(:group_reservations, { :through => :group_reservations, :source => :ticket_requests })
 
-  def available
-    
-  end 
 
 end
