@@ -18,6 +18,9 @@ class GroupReservationsController < ApplicationController
   end
 
   def create
+    #future coding changes: Theater.where({ :location_id => 1 }) <--- 1 needs to be changed to user_location
+
+
     the_group_reservation = GroupReservation.new
     #status defaults to requested, not a user input
     the_group_reservation.reservation_status = "requested"
@@ -64,10 +67,12 @@ class GroupReservationsController < ApplicationController
       theaters_unavailable = 0
       theaters_too_small = 0
       while the_group_reservation.reservation_status == "requested" # reservation is not available
-        if Theater.all.at(a_theater_position) == nil # if we have already checked all the theaters
+
+        # i think there is a way to make methods in theater.rb called available and big_enough => if a_theater.available and if a_theater.big_enough
+        if Theater.where({ :location_id => 1 }).at(a_theater_position) == nil # if we have already checked all the theaters
           the_group_reservation.reservation_status = "failed" # break while loop
         else # we have not checked all theaters and need to go through it again
-          a_theater = Theater.all.at(a_theater_position) # get a theater in array of theaters
+          a_theater = Theater.where({ :location_id => 1 }).at(a_theater_position) # get a theater in array of theaters
 
           if res_target_size <= a_theater.seats_in_theater # if theater is big enough
             # check if there are reservations on a day
@@ -84,12 +89,6 @@ class GroupReservationsController < ApplicationController
                   
                   theaters_unavailable += 1
 
-                  # need to make this in conjunction with theater not big enough
-                  # add 1 to "theaters_unavailable" 
-                  # if theaters_unavailable + theaters_too_small == count of theaters && theaters_unavailable != count of theaters
-                  #   theaters_too_small error message needs to be displayed and
-                  # else # all theaters were big enough
-                  #   "All theaters are unavailable at TIME on DATE." and suggest new times from all theaters
                   # then make it redirect to the same reservation page, with an error message and a slightly earlier and later start times suggestions
                   # when suggesting new times, we only want to look in theaters that are big enough
                   # make a suggested start time that equal target_time, it should automatically update target_end_time (start time+ duration)
@@ -107,12 +106,6 @@ class GroupReservationsController < ApplicationController
           else # theater is not big enough
             # check next theater
             theaters_too_small += 1
-
-            # add 1 to "theaters_too_small"
-            # need to count theaters that are not big enough to fit target_size => if there are any theaters that are not big enough, a different error message needs to be displayed => "The theaters large enough to seat X people are unavailable at TIME on DATE."
-
-            # need to move onto the next theater - add 1 to theater_position
-            # but if there are no theaters left to check, the reservation fails => count array of theaters 
             
           end
         end
@@ -122,12 +115,67 @@ class GroupReservationsController < ApplicationController
       end
 
       count_of_theaters = Theater.where({ :location_id => 1 }).count
-      if theaters_unavailable + theaters_too_small == count_of_theaters
-        if theaters_unavailable != count_of_theaters
+      if theaters_unavailable + theaters_too_small == count_of_theaters # if all theaters fail for some reason
+        if theaters_unavailable != count_of_theaters # if some theaters were too small
           error_message = "There are no theaters available that seat #{res_target_size.to_s} people at #{res_target_time.strftime("%l:%M %p")}."
-        else
-          error_message = "There are no theaters available at #{res_target_time.strftime("%l:%M %p")}. <br> lets see if this works"
+        else # the only reason a res failed is because times were blocked off, not group size
+          error_message = "There are no theaters available at #{res_target_time.strftime("%l:%M %p")}. \n second line"
         end
+
+        #suggest new times
+        # need to check each theater
+        # suggested times does not work!! might be that overlaps doesn't work <- check in console
+        @best_earlier_time = Time.new
+        @best_later_time = Time.new
+        Theater.where({ :location_id => 1 }).each do |a_theater|
+          if res_target_size <= a_theater.seats_in_theater # if theater is big enough
+            the_group_reservation.reservation_duration = movie_duration + a_theater.turnover_time
+
+            a_theater.group_reservations.where({ :reservation_date => res_target_date }).each do |a_reservation| #check each reservation
+              while the_group_reservation.overlaps?(a_reservation)
+                the_group_reservation.reservation_time = the_group_reservation.reservation_time - 1.minutes
+              end
+              earlier_time = the_group_reservation.reservation_time
+              if (res_target_time - @best_earlier_time) > (res_target_time - earlier_time)
+                @best_earlier_time = earlier_time
+              end 
+              the_group_reservation.reservation_time = res_target_time
+
+              
+              while the_group_reservation.overlaps?(a_reservation) # while it overlaps add a minute until it overlaps
+                the_group_reservation.reservation_time = the_group_reservation.reservation_time + 1.minutes
+              end
+              later_time = the_group_reservation.reservation_time
+              if (res_target_time - @best_later_time).abs > (res_target_time - later_time).abs
+                @best_later_time = later_time
+              end 
+              
+              the_group_reservation.reservation_time = res_target_time
+
+              
+              # if the_group_reservation.reservation_time < a_reservation.reservation_time #if the time starts before
+              #   while the_group_reservation.overlaps?(a_reservation)
+              #     the_group_reservation.reservation_time = the_group_reservation.reservation_time - 1.minutes
+              #   end
+              #   earlier_time = the_group_reservation.reservation_time
+              #   the_group_reservation.reservation_time = res_target_time
+              # elsif the_group_reservation.reservation_time > a_reservation.reservation_time # if the time starts after
+              #   while the_group_reservation.overlaps?(a_reservation) # while it overlaps add a minute until it overlaps
+              #     the_group_reservation.reservation_time = the_group_reservation.reservation_time + 1.minutes
+              # end
+            end
+
+          end
+        end
+        error_message = error_message + "Available earlier: #{@best_earlier_time} Available later: #{@best_later_time}"
+
+        # While overlaps?(), subtract/add one minute from start time.
+        # Save as earlier/later start time if it is closer to target time
+        # Check each theater and if then I’ll get the best available earlier and later times. 
+        # *need to account for theater size and date as well
+        # Then I need to check which one is closest to target time. Suggest both, but prepopulate with the closer time, 
+        # They then check availability again (maybe rename that button)
+
 
       end
 
