@@ -19,10 +19,20 @@ class TicketRequestsController < ApplicationController
 
   def create
     the_ticket_request = TicketRequest.new
+
+    #comes from params
     the_ticket_request.user_id = params.fetch("query_user_id")
     the_ticket_request.group_id = params.fetch("query_group_id")
+    the_group_reservation = GroupReservation.where({ :id => the_ticket_request.group_id }).first
+
+    #first should default to
     the_ticket_request.ticket_status = params.fetch("query_ticket_status")
     the_ticket_request.ticket = params.fetch("query_ticket")
+
+    # to get it to create the first ticket -> user_id is current user, group_id is from the reservation, status is assigned, and ticket is produced
+    # tickets_made = 0
+    # 
+    # while tickets_made < the_group_reservation.
 
     if the_ticket_request.valid?
       the_ticket_request.save
