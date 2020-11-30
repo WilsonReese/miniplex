@@ -26,20 +26,39 @@ class TicketRequestsController < ApplicationController
     the_group_reservation = GroupReservation.where({ :id => the_ticket_request.group_id }).first
 
     #first should default to
-    the_ticket_request.ticket_status = params.fetch("query_ticket_status")
-    the_ticket_request.ticket = params.fetch("query_ticket")
+    the_ticket_request.ticket_status = "assigned"
+
+    #need to get ticket from API
+    
 
     # to get it to create the first ticket -> user_id is current user, group_id is from the reservation, status is assigned, and ticket is produced
-    # tickets_made = 0
-    # 
-    # while tickets_made < the_group_reservation.
-
+    the_ticket_request.ticket = "QR CODE FOR FIRST TICKET"
     if the_ticket_request.valid?
       the_ticket_request.save
-      redirect_to("/ticket_requests", { :notice => "Ticket request created successfully." })
     else
-      redirect_to("/ticket_requests", { :notice => "Ticket request failed to create successfully." })
+      redirect_to("/ticket_requests", { :notice => "Ticket FIRST request failed to create successfully." })
     end
+    tickets_made = 1
+    while tickets_made < the_group_reservation.number_of_tickets
+      another_ticket_request = TicketRequest.new
+      another_ticket_request.group_id = params.fetch("query_group_id")
+      another_ticket_request.ticket_status = "unassigned"
+      another_ticket_request.ticket = "QR CODE FOR TICKET #{tickets_made + 1}."
+      if another_ticket_request.valid?
+        another_ticket_request.save
+      else
+        redirect_to("/ticket_requests", { :notice => "Ticket request #{tickets_made + 1} failed to create successfully." })
+      end
+      tickets_made += 1
+    end
+    redirect_to("/ticket_requests", { :notice => "Ticket requests created successfully." })
+
+    # if the_ticket_request.valid?
+    #   the_ticket_request.save
+    #   redirect_to("/ticket_requests", { :notice => "Ticket request created successfully." })
+    # else
+    #   redirect_to("/ticket_requests", { :notice => "Ticket request failed to create successfully." })
+    # end
   end
 
   def update
