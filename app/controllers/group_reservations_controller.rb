@@ -39,28 +39,29 @@ class GroupReservationsController < ApplicationController
     #convert res date and time into a DateTime
     d = res_target_date
     t = res_target_time
-    new_reservation_datetime = DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec, t.zone)
+    new_reservation_datetime = DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec)
     new_reservation_movie_end = new_reservation_datetime + movie_duration.minutes
-    current_datetime = DateTime.now
+    current_date = Date.today
+    ct = Time.now.in_time_zone("Central Time (US & Canada)")
+    current_datetime = DateTime.new(current_date.year, current_date.month, current_date.day, ct.hour, ct.min, ct.sec)
     
     #need to remove this
     new_res_duration = movie_duration
-    new_res_theater = 0
     the_group_reservation.number_of_tickets = res_target_size
     the_group_reservation.reservation_date = res_target_date
     the_group_reservation.reservation_duration = new_res_duration
     the_group_reservation.reservation_end_time = res_target_time + new_res_duration.minutes
     the_group_reservation.reservation_time = res_target_time
     open_time = Location.where({ :id => 1 }).first.open_time
-    close_time = Location.where({ :id => 1 }).first.close_time
+    close_time = Location.where({ :id => 1 }).first.close_time 
 
     if new_reservation_datetime > current_datetime # if reservation is in the future
       if open_time > the_group_reservation.reservation_time # res too early (before opening)
         the_group_reservation.reservation_status = "failed"
-        error_message = "A reservation must be between #{open_time.strftime("%l:%M %p")} and #{close_time.strftime("%l:%M %p")}."
-      elsif close_time < the_group_reservation.reservation_end_time #  or too late
+        error_message = "A reservation must be between #{(open_time + 6.hours).strftime("%l:%M %p")} and #{(close_time + 6.hours).strftime("%l:%M %p")}."
+      elsif close_time < the_group_reservation.reservation_end_time #  or too late, currently not used, and working improperly
         the_group_reservation.reservation_status = "failed"
-        error_message = "A reservation must be between #{open_time.strftime("%l:%M %p")} and #{close_time.strftime("%l:%M %p")}."
+        error_message = "A reservation must be between #{(open_time + 6.hours).strftime("%l:%M %p")} and #{(close_time + 6.hours).strftime("%l:%M %p")}."
       else
       
         a_theater_position = 0 # starting array position
@@ -118,7 +119,7 @@ class GroupReservationsController < ApplicationController
           if theaters_unavailable != count_of_theaters # if some theaters were too small
             error_message = "There are no theaters available that seat #{res_target_size.to_s} people at #{res_target_time.strftime("%l:%M %p")}."
           else # the only reason a res failed is because times were blocked off, not group size
-            error_message = "There are no theaters available at #{res_target_time.strftime("%l:%M %p")}. \n second line"
+            error_message = "There are no theaters available at #{res_target_time.strftime("%l:%M %p")}."
           end
 
           # #suggest new times
@@ -181,7 +182,7 @@ class GroupReservationsController < ApplicationController
 
     else
       the_group_reservation.reservation_status = "failed"
-      error_message = error_message + "Reservation must be in the future. "
+      error_message = "A reservation must be in the future."
     end
 
     if the_group_reservation.reservation_status == "available"

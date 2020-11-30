@@ -76,6 +76,22 @@
         <input type="text" id="location_name_box" name="query_location_name" value="<%= @the_location.location_name %>">
       </div>
 
+      <div>
+        <label for="open_time_box">
+          Location Open Time
+        </label>
+
+        <input type="time" id="open_time_box" name="query_open_time" value="<%= @the_location.open_time %>">
+      </div>
+      
+      <div>
+        <label for="close_time_box">
+          Location Close Time
+        </label>
+
+        <input type="time" id="close_time_box" name="query_close_time" value="<%= @the_location.close_time %>">
+      </div>
+
       <button>
         Update location
       </button>
