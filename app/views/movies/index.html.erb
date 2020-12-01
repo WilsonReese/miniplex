@@ -102,52 +102,52 @@
         </form>
       </div>
     </div>
+
+    <hr>
+
+    <div>
+      <div>
+        <table border="1">
+          <tr>
+            <th>
+              Title
+            </th>
+
+            <th>
+              Duration
+            </th>
+
+            <th>
+              Currently Showing
+            </th>
+
+            <th>
+            </th>
+          </tr>
+
+          <% @list_of_movies.order({ :currently_showing => :desc }).each do |a_movie| %>
+            <tr>
+              <td>
+                <%= a_movie.title %>
+              </td>
+
+              <td>
+                <%= a_movie.duration %>
+              </td>
+
+              <td>
+                <%= a_movie.currently_showing %>
+
+              <td>
+                <a href="/movies/<%= a_movie.id %>">
+                  Edit Movie Details
+                </a>
+              </td>
+            </tr>
+          <% end %>
+
+        </table>
+      </div>
+    </div>
   <% end %>
 <% end %>
-
-<hr>
-
-<div>
-  <div>
-    <table border="1">
-      <tr>
-        <th>
-          Title
-        </th>
-
-        <th>
-          Duration
-        </th>
-
-        <th>
-          Currently Showing
-        </th>
-
-        <th>
-        </th>
-      </tr>
-
-      <% @list_of_movies.order({ :currently_showing => :desc }).each do |a_movie| %>
-        <tr>
-          <td>
-            <%= a_movie.title %>
-          </td>
-
-          <td>
-            <%= a_movie.duration %>
-          </td>
-
-          <td>
-            <%= a_movie.currently_showing %>
-
-          <td>
-            <a href="/movies/<%= a_movie.id %>">
-              Edit Movie Details
-            </a>
-          </td>
-        </tr>
-      <% end %>
-
-    </table>
-  </div>
-</div>
