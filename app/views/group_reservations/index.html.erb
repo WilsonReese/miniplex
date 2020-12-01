@@ -4,75 +4,8 @@
   <div>
     <div>
       <h1>
-        List of all group reservations - users have to sign in to get to/past this point
+        My Reservations
       </h1>
-    </div>
-  </div>
-  <hr>
-  <div>
-    <div>
-      <h2>
-        Add a new group reservation
-      </h2>
-      <form action="/insert_group_reservation" method="post">
-        <div>
-          <label for="reservation_date_box">
-            Pick a day
-          </label>
-          <input type="date" id="reservation_date_box" name="query_reservation_date">
-        </div>
-        <div>
-          <label for="reservation_time_box">
-            Pick a time
-          </label>
-          <input type="time" id="reservation_time_box" name="query_reservation_time">
-        </div>
-        <div>
-          <label for="reservation_duration_box">
-            Reservation duration
-          </label>
-          <input type="text" id="reservation_duration_box" name="query_reservation_duration">
-        </div>
-        <div>
-          <label for="number_of_tickets_box">
-            Number of tickets
-          </label>
-          <select type="text" id="number_of_tickets_box" name="query_number_of_tickets">
-            <% max_seats_in_theaters = 0 %>
-            <% Theater.all.each do |theater| %>
-              <% if theater.seats_in_theater > max_seats_in_theaters %>
-                <% max_seats_in_theaters = theater.seats_in_theater %>
-              <% end %>
-            <% end %>
-            <% count = 1 %>
-            <% max_seats_in_theaters.times do %>
-              <option><%= count %></option>
-              <% count = count + 1 %>
-            <% end %>
-          </select>
-        </div>
-        <div>
-          <label for="movie_id_box">
-            Movie
-          </label>
-          <select type="text" id="movie_id_box" name="query_movie_id">
-            <% Movie.all.each do |a_movie| %>
-              <% if a_movie.currently_showing == true %>
-                <option><%= a_movie.title %></option>
-              <% end %>
-            <% end %>
-          </select>
-        </div>
-        <div>
-          <label for="theater_id_box">
-            Theater
-          </label>
-          <input type="text" id="theater_id_box" name="query_theater_id">
-        </div>
-        <button>
-          Create group reservation
-        </button>
-      </form>
     </div>
   </div>
   <hr>
@@ -157,13 +90,12 @@
       </table>
     </div>
   </div>
-  <hr>
 <% end %>
 
 <% if @current_user != nil %>
   <% if @current_user.admin == true %>
     <hr>
-      <h2>ADMIN ONLY</h2>
+      <h2>ADMIN VIEW ONLY</h2>
     <hr>
     <div>
       <div>
