@@ -1,9 +1,263 @@
 <% if @current_user == nil %>
   <h4>Please <a href="/user_sign_in">sign in</a> first.</h4>
 <% else %>
-  <% if TicketRequest.where({ :group_id => @the_group_reservation.id }).exists?({ :user_id => @current_user })  %>
+  <% if TicketRequest.where({ :group_id => @the_group_reservation.id }).exists?({ :user_id => @current_user }) %>
+    <div>
+    <div>
+      <h1>
+        Group reservation #<%= @the_group_reservation.id %> details
+      </h1>
+
+      <div>
+        <div>
+          <a href="/group_reservations">
+            Go back
+          </a>
+        </div>
+
+        <div>
+          <a href="/delete_group_reservation/<%= @the_group_reservation.id %>">
+            Delete group reservation
+          </a>
+        </div>
+      </div>
+  <!--
+  This page needs to be updated so that if the group_reservation is available, it shows the form to get tickets
+  But then once the reservation is confirmed, it needs to just show the reservation details and all of the tickets
+  !-->
+      <dl>
+        <dt>
+          Movie
+        </dt>
+        <dd>
+          <img src="<%= @the_group_reservation.movie.image %>">
+        </dd>
+        <dd>
+          <%= @the_group_reservation.movie.title %>
+        </dd>
+
+        <dt>
+          Reservation date
+        </dt>
+        <dd>
+          <%= @the_group_reservation.reservation_date.strftime("%A, %B %e, %Y") %>
+        </dd>
+
+        <dt>
+          Reservation Start Time
+        </dt>
+        <dd>
+          <%= (@the_group_reservation.reservation_time + 6.hours).strftime("%l:%M %p") %>
+        </dd>
+
+        <dt>
+          Reservation End Time
+        </dt>
+        <dd>
+          <%= (@the_group_reservation.reservation_end_time + 6.hours).strftime("%l:%M %p") %>
+        </dd>
+
+        <dt>
+          Number of tickets
+        </dt>
+        <dd>
+          <%= @the_group_reservation.number_of_tickets %>
+        </dd>
+
+        <dt>
+          Location Address
+        </dt>
+        <dd>
+          <%= @the_group_reservation.theater.location.street_address %>
+        </dd>
+      </dl>
+      
+      <% if TicketRequest.where({ :group_id => @the_group_reservation.id }).first == nil %>
+        <div>
+          <form action="/insert_ticket_request" method="post">
+            <div>
+              <label for="user_id_box" hidden>
+                User
+              </label>
+
+              <input type="text" value="<%=@current_user.id%>" id="user_id_box" name="query_user_id" hidden>
+            </div>
+
+            <div>
+              <label for="group_id_box" hidden>
+                Group
+              </label>
+
+              <input type="text" value="<%= @the_group_reservation.id %>" id="group_id_box" name="query_group_id" hidden>
+            </div>
+
+            <button>
+              Get Tickets
+            </button>
+          </form>
+        </div>
+      <% else %>
+        <div>
+          <table>
+            <tr>
+              <th>
+                ID
+              </th>
+
+              <th>
+                User
+              </th>
+
+              <th>
+                Group
+              </th>
+
+              <th>
+                Ticket status
+              </th>
+
+              <th>
+                Ticket
+              </th>
+
+              <th>
+                Assign Tickets
+              </th>
+
+              <th>
+              </th>
+            </tr>
+
+            <% @list_of_group_tickets.each do |a_ticket_request| %>
+              <tr>
+                <td>
+                  <%= a_ticket_request.id %>
+                </td>
+
+                <td>
+                  <%= a_ticket_request.user_id %>
+                </td>
+
+                <td>
+                  <%= a_ticket_request.group_id %>
+                </td>
+
+                <td>
+                  <%= a_ticket_request.ticket_status %>
+                </td>
+
+                <td>
+                  <%= a_ticket_request.ticket %>
+                </td>
+
+                <td>
+                  <% if a_ticket_request.user == nil %>
+                    <form action="/modify_ticket_request/<%= a_ticket_request.id %>"  method="post">
+                      <label for="user_email_box">
+                        User Email
+                      </label>
+                      <input type="text" id="user_email_box" name="query_user_email">
+                      <button>
+                        Assign Ticket
+                      </button>
+                    </form>
+                  <% else %>
+                    <%= a_ticket_request.user.email %>
+                  <%end%>
+                </td>
+
+                <td>
+                  <a href="/ticket_requests/<%= a_ticket_request.id %>">
+                    Show details
+                  </a>
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <hr>
+
 
   <div>
+    <div>
+      <h2>
+        Edit group reservation
+      </h2>
+
+      <form action="/modify_group_reservation/<%= @the_group_reservation.id %>"  method="post" >
+        <div>
+          <label for="reservation_status_box">
+            Reservation status
+          </label>
+
+          <input type="text" id="reservation_status_box" name="query_reservation_status" value="<%= @the_group_reservation.reservation_status %>">
+        </div>
+
+        <div>
+          <label for="reservation_date_box">
+            Reservation date
+          </label>
+
+          <input type="date" id="reservation_date_box" name="query_reservation_date" value="<%= @the_group_reservation.reservation_date %>">
+        </div>
+
+        <div>
+          <label for="reservation_time_box">
+            Reservation time
+          </label>
+
+          <input type="time" id="reservation_time_box" name="query_reservation_time" value="<%= @the_group_reservation.reservation_time %>">
+        </div>
+
+        <div>
+          <label for="reservation_duration_box">
+            Reservation duration
+          </label>
+
+          <input type="text" id="reservation_duration_box" name="query_reservation_duration" value="<%= @the_group_reservation.reservation_duration %>">
+        </div>
+
+        <div>
+          <label for="number_of_tickets_box">
+            Number of tickets
+          </label>
+
+          <input type="text" id="number_of_tickets_box" name="query_number_of_tickets" value="<%= @the_group_reservation.number_of_tickets %>">
+        </div>
+
+        <div>
+          <label for="movie_id_box">
+            Movie
+          </label>
+
+          <input type="text" id="movie_id_box" name="query_movie_id" value="<%= @the_group_reservation.movie_id %>">
+        </div>
+
+        <div>
+          <label for="theater_id_box">
+            Theater
+          </label>
+
+          <input type="text" id="theater_id_box" name="query_theater_id" value="<%= @the_group_reservation.theater_id %>">
+        </div>
+
+        <button>
+          Update group reservation
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <hr>
+  <% elsif @current_user != nil && @current_user.admin == true %>
+    <hr>
+      <h2>ADMIN VIEW</h2>
+    <hr>
+    <div>
     <div>
       <h1>
         Group reservation #<%= @the_group_reservation.id %> details

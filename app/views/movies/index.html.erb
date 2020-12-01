@@ -47,107 +47,105 @@
   </div>
 </div>
 
-<% if @current_user != nil %>
-  <% if @current_user.admin == true %>
-    <hr>
-      <h2>ADMIN VIEW ONLY</h2>
-    <hr>
+<% if @current_user != nil && @current_user.admin == true %>
+  <hr>
+    <h2>ADMIN VIEW ONLY</h2>
+  <hr>
+  <div>
     <div>
-      <div>
-        <h2>
-          Add a new movie
-        </h2>
-        <form action="/insert_movie" method="post" class="form-horizontal" enctype="multipart/form-data">
-          <div>
-            <label for="title_box">
-              Title
-            </label>
+      <h2>
+        Add a new movie
+      </h2>
+      <form action="/insert_movie" method="post" class="form-horizontal" enctype="multipart/form-data">
+        <div>
+          <label for="title_box">
+            Title
+          </label>
 
-            <input type="text" id="title_box" name="query_title">
-          </div>
+          <input type="text" id="title_box" name="query_title">
+        </div>
 
-          <div>
-            <label for="duration_box">
-              Duration
-            </label>
+        <div>
+          <label for="duration_box">
+            Duration
+          </label>
 
-            <input type="text" id="duration_box" name="query_duration">
-          </div>
+          <input type="text" id="duration_box" name="query_duration">
+        </div>
 
-          <div>
-            <label for="description_box">
-              Description
-            </label>
+        <div>
+          <label for="description_box">
+            Description
+          </label>
 
-            <textarea id="description_box" name="query_description" rows="3"></textarea>
-          </div>
+          <textarea id="description_box" name="query_description" rows="3"></textarea>
+        </div>
 
-          <div>
-            <label for="image_box">
-              Image
-            </label>
+        <div>
+          <label for="image_box">
+            Image
+          </label>
 
-            <input type="file" id="image_box" name="image" class="form-control">
-          </div>
+          <input type="file" id="image_box" name="image" class="form-control">
+        </div>
 
-          <div>
-            <input type="checkbox" id="currently_showing_box" name="query_currently_showing" value="1">
+        <div>
+          <input type="checkbox" id="currently_showing_box" name="query_currently_showing" value="1">
 
-            <label for="currently_showing_box">Currently showing</label>
-          </div>
+          <label for="currently_showing_box">Currently showing</label>
+        </div>
 
-          <button>
-            Create movie
-          </button>
-        </form>
-      </div>
+        <button>
+          Create movie
+        </button>
+      </form>
     </div>
+  </div>
 
-    <hr>
+  <hr>
 
+  <div>
     <div>
-      <div>
-        <table border="1">
+      <table border="1">
+        <tr>
+          <th>
+            Title
+          </th>
+
+          <th>
+            Duration
+          </th>
+
+          <th>
+            Currently Showing
+          </th>
+
+          <th>
+          </th>
+        </tr>
+
+        <% @list_of_movies.order({ :currently_showing => :desc }).each do |a_movie| %>
           <tr>
-            <th>
-              Title
-            </th>
+            <td>
+              <%= a_movie.title %>
+            </td>
 
-            <th>
-              Duration
-            </th>
+            <td>
+              <%= a_movie.duration %>
+            </td>
 
-            <th>
-              Currently Showing
-            </th>
+            <td>
+              <%= a_movie.currently_showing %>
 
-            <th>
-            </th>
+            <td>
+              <a href="/movies/<%= a_movie.id %>">
+                Edit Movie Details
+              </a>
+            </td>
           </tr>
+        <% end %>
 
-          <% @list_of_movies.order({ :currently_showing => :desc }).each do |a_movie| %>
-            <tr>
-              <td>
-                <%= a_movie.title %>
-              </td>
-
-              <td>
-                <%= a_movie.duration %>
-              </td>
-
-              <td>
-                <%= a_movie.currently_showing %>
-
-              <td>
-                <a href="/movies/<%= a_movie.id %>">
-                  Edit Movie Details
-                </a>
-              </td>
-            </tr>
-          <% end %>
-
-        </table>
-      </div>
+      </table>
     </div>
-  <% end %>
+  </div>
 <% end %>
