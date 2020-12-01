@@ -4,23 +4,6 @@
       Movie #<%= @the_movie.id %> details
     </h1>
 
-    <div>
-      <div>
-        <a href="/movies">
-          Go back
-        </a>
-      </div>
-      <% if @current_user != nil %>
-        <% if @current_user.admin == true %>
-          <div>
-            <a href="/delete_movie/<%= @the_movie.id %>">
-              Delete movie
-            </a>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
-
     <hr>
 
     <div>
@@ -152,54 +135,63 @@
 
 <hr>
 
-<% if @current_user != nil %>
-  <% if @current_user.admin == true %>
+<% if @current_user != nil && @current_user.admin == true %>
+  <h2>ADMIN VIEW ONLY</h2>
+  <hr>
+
+  <div>
     <div>
-      <div>
-        <h2>
-          Edit movie
-        </h2>
+      <h2>
+        Edit movie
+      </h2>
 
-        <form action="/modify_movie/<%= @the_movie.id %>"  method="post" >
-          <div>
-            <label for="title_box">
-              Title
-            </label>
+      <form action="/modify_movie/<%= @the_movie.id %>"  method="post" >
+        <div>
+          <label for="title_box">
+            Title
+          </label>
 
-            <input type="text" id="title_box" name="query_title" value="<%= @the_movie.title %>">
-          </div>
+          <input type="text" id="title_box" name="query_title" value="<%= @the_movie.title %>">
+        </div>
 
-          <div>
-            <label for="duration_box">
-              Duration
-            </label>
+        <div>
+          <label for="duration_box">
+            Duration
+          </label>
 
-            <input type="text" id="duration_box" name="query_duration" value="<%= @the_movie.duration %>">
-          </div>
+          <input type="text" id="duration_box" name="query_duration" value="<%= @the_movie.duration %>">
+        </div>
 
-          <div>
-            <label for="description_box">
-              Description
-            </label>
+        <div>
+          <label for="description_box">
+            Description
+          </label>
 
-            <textarea id="description_box" name="query_description"><%= @the_movie.description %></textarea>
-          </div>
+          <textarea id="description_box" name="query_description"><%= @the_movie.description %></textarea>
+        </div>
 
-          <div>
-            <input type="checkbox" id="currently_showing_box" name="query_currently_showing" value="1" <%= "checked" if @the_movie.currently_showing %>>
+        <div>
+          <input type="checkbox" id="currently_showing_box" name="query_currently_showing" value="1" <%= "checked" if @the_movie.currently_showing %>>
 
-            <label for="currently_showing_box">
-                Currently showing
-            </label>
-          </div>
+          <label for="currently_showing_box">
+              Currently showing
+          </label>
+        </div>
 
-          <button>
-            Update movie
-          </button>
-        </form>
-      </div>
+        <button>
+          Update movie
+        </button>
+      </form>
     </div>
-    <hr>
-  <% end %>
+  </div>
+  <hr>
+
+  <div>
+    <a href="/delete_movie/<%= @the_movie.id %>">
+      Delete movie
+    </a>
+  </div>
+
+  <hr>
 <% end %>
 
