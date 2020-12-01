@@ -6,8 +6,51 @@
   </div>
 </div>
 
+
+<hr>
+<div>
+  <div>
+    <table>
+      <tr>
+        <th>
+          Image
+        </th>
+
+        <th>
+          Title
+        </th>
+        <th>
+        </th>
+      </tr>
+
+      <% @list_of_movies.where({ :currently_showing => true }).each do |a_movie| %>
+        <tr>
+          <td>
+            <a href="/movies/<%= a_movie.id %>">
+              <img src="<%= a_movie.image %>" class="img-responsive">
+            </a>
+          </td>
+
+          <td>
+            <%= a_movie.title %>
+          </td>
+
+          <td>
+            <a href="/movies/<%= a_movie.id %>">
+              Show details
+            </a>
+          </td>
+
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
 <% if @current_user != nil %>
   <% if @current_user.admin == true %>
+    <hr>
+    <h2>ADMIN ONLY</h2>
     <hr>
     <div>
       <div>
@@ -62,45 +105,49 @@
   <% end %>
 <% end %>
 
-
 <hr>
 
+<div>
   <div>
-    <table>
+    <table border="1">
       <tr>
-        <th>
-          Image
-        </th>
-
         <th>
           Title
         </th>
+
+        <th>
+          Duration
+        </th>
+
+        <th>
+          Currently Showing
+        </th>
+
         <th>
         </th>
       </tr>
 
-      <% @list_of_movies.each do |a_movie| %>
-      <tr>
-        <td>
-          <a href="/movies/<%= a_movie.id %>">
-            <img src="<%= a_movie.image %>" class="img-responsive">
-          </a>
-        </td>
+      <% @list_of_movies.order({ :currently_showing => :desc }).each do |a_movie| %>
+        <tr>
+          <td>
+            <%= a_movie.title %>
+          </td>
 
-        <td>
-          <%= a_movie.title %>
-        </td>
+          <td>
+            <%= a_movie.duration %>
+          </td>
 
-        <td>
-          <a href="/movies/<%= a_movie.id %>">
-            Show details
-          </a>
-        </td>
+          <td>
+            <%= a_movie.currently_showing %>
 
-      </tr>
+          <td>
+            <a href="/movies/<%= a_movie.id %>">
+              Edit Movie Details
+            </a>
+          </td>
+        </tr>
       <% end %>
+
     </table>
   </div>
 </div>
-
-<hr>
