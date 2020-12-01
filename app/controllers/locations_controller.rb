@@ -21,6 +21,8 @@ class LocationsController < ApplicationController
     the_location = Location.new
     the_location.street_address = params.fetch("query_street_address")
     the_location.location_name = params.fetch("query_location_name")
+    the_location.open_time = params.fetch("query_open_time")
+    the_location.close_time = params.fetch("query_close_time")
 
     if the_location.valid?
       the_location.save
@@ -38,7 +40,7 @@ class LocationsController < ApplicationController
     the_location.location_name = params.fetch("query_location_name")
     # the_location.open_time = Time.new(2000, 01, 01, 8, 0, 0, "-06:00")
     the_location.open_time = params.fetch("query_open_time")
-    the_location.open_time = params.fetch("query_close_time")
+    the_location.close_time = params.fetch("query_close_time")
 
     if the_location.valid?
       the_location.save
