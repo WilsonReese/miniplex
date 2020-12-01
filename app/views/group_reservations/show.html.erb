@@ -43,14 +43,14 @@ But then once the reservation is confirmed, it needs to just show the reservatio
         Reservation Start Time
       </dt>
       <dd>
-        <%= @the_group_reservation.reservation_time.strftime("%l:%M %p") %>
+        <%= (@the_group_reservation.reservation_time + 6.hours).strftime("%l:%M %p") %>
       </dd>
 
       <dt>
         Reservation End Time
       </dt>
       <dd>
-        <%= @the_group_reservation.reservation_end_time.strftime("%l:%M %p") %>
+        <%= (@the_group_reservation.reservation_end_time + 6.hours).strftime("%l:%M %p") %>
       </dd>
 
       <dt>

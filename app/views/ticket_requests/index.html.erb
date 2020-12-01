@@ -80,11 +80,7 @@
         </th>
 
         <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
+          Assign Tickets
         </th>
 
         <th>
@@ -114,10 +110,19 @@
         </td>
 
         <td>
-          <%= time_ago_in_words(a_ticket_request.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(a_ticket_request.updated_at) %> ago
+          <% if a_ticket_request.user == nil %>
+            <form action="/modify_ticket_request/<%= a_ticket_request.id %>"  method="post">
+              <label for="user_email_box">
+                User Email
+              </label>
+              <input type="text" id="user_email_box" name="query_user_email">
+              <button>
+                Assign Ticket
+              </button>
+            </form>
+          <% else %>
+            <%= a_ticket_request.user.email %>
+          <%end%>
         </td>
 
         <td>
