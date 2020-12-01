@@ -25,10 +25,13 @@
         <label for="zip_code_box">Zip code</label>
         <input id="zip_code_box" name="query_zip_code" value="<%= @current_user.zip_code %>">
       </div>
-      <div>
-        <label for="admin_box">Admin</label>
-        <input id="admin_box" name="query_admin" type="checkbox" value="1" <%= "checked" if @current_user.admin %>>
-      </div>
+      
+      <% if @current_user != nil && @current_user.admin == true %>
+        <div>
+          <label for="admin_box">Admin</label>
+          <input id="admin_box" name="query_admin" type="checkbox" value="1" <%= "checked" if @current_user.admin %>>
+        </div>
+      <% end %>
 
       <div>
         <label for="password_box">Password</label>

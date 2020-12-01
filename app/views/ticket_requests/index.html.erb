@@ -1,144 +1,105 @@
-<div>
+<% if @current_user != nil && @current_user.admin == true %>
+  <hr>
+  <h2>ADMIN VIEW ONLY</h2>
+  <hr>
   <div>
-    <h1>
-      List of all ticket requests
-    </h1>
+    <div>
+      <h1>
+        List of all ticket requests
+      </h1>
+    </div>
   </div>
-</div>
 
-<hr>
-
-<div>
+  <hr>
   <div>
-    <h2>
-      Add a new ticket request
-    </h2>
+    <div>
+      <table>
+        <tr>
+          <th>
+            ID
+          </th>
 
-    <form action="/insert_ticket_request" method="post">
-      <div>
-        <label for="user_id_box">
-          User
-        </label>
+          <th>
+            User
+          </th>
 
-        <input type="text" id="user_id_box" name="query_user_id">
-      </div>
+          <th>
+            Group
+          </th>
 
-      <div>
-        <label for="group_id_box">
-          Group
-        </label>
+          <th>
+            Ticket status
+          </th>
 
-        <input type="text" id="group_id_box" name="query_group_id">
-      </div>
+          <th>
+            Ticket
+          </th>
 
-      <div>
-        <label for="ticket_status_box">
-          Ticket status
-        </label>
+          <th>
+            Assign Tickets
+          </th>
 
-        <input type="text" id="ticket_status_box" name="query_ticket_status">
-      </div>
+          <th>
+          </th>
+        </tr>
 
-      <div>
-        <label for="ticket_box">
-          Ticket
-        </label>
+        <% @list_of_ticket_requests.each do |a_ticket_request| %>
+          <% the_group_reservation = GroupReservation.where({ :id => a_ticket_request.group_id }).first %>
+          <% if a_ticket_request.group_id == the_group_reservation.id %>
+            <tr>
+              <td>
+                <%= a_ticket_request.id %>
+              </td>
 
-        <input type="text" id="ticket_box" name="query_ticket">
-      </div>
+              <td>
+                <%= a_ticket_request.user_id %>
+              </td>
 
-      <button>
-        Create ticket request
-      </button>
-    </form>
-  </div>
-</div>
+              <td>
+                <%= a_ticket_request.group_id %>
+              </td>
 
-<hr>
-<div>
-  <div>
-    <table>
-      <tr>
-        <th>
-          ID
-        </th>
+              <td>
+                <%= a_ticket_request.ticket_status %>
+              </td>
 
-        <th>
-          User
-        </th>
+              <td>
+                <%= a_ticket_request.ticket %>
+              </td>
 
-        <th>
-          Group
-        </th>
+              <td>
+                <% if a_ticket_request.user == nil %>
+                  <form action="/modify_ticket_request/<%= a_ticket_request.id %>"  method="post">
+                    <label for="user_email_box">
+                      User Email
+                    </label>
+                    <input type="text" id="user_email_box" name="query_user_email">
+                    <button>
+                      Assign Ticket
+                    </button>
+                  </form>
+                <% else %>
+                  <%= a_ticket_request.user.email %>
+                <%end%>
+              </td>
 
-        <th>
-          Ticket status
-        </th>
-
-        <th>
-          Ticket
-        </th>
-
-        <th>
-          Assign Tickets
-        </th>
-
-        <th>
-        </th>
-      </tr>
-
-      <% @list_of_ticket_requests.each do |a_ticket_request| %>
-        <% the_group_reservation = GroupReservation.where({ :id => a_ticket_request.group_id }).first %>
-        <% if a_ticket_request.group_id == the_group_reservation.id %>
-          <tr>
-            <td>
-              <%= a_ticket_request.id %>
-            </td>
-
-            <td>
-              <%= a_ticket_request.user_id %>
-            </td>
-
-            <td>
-              <%= a_ticket_request.group_id %>
-            </td>
-
-            <td>
-              <%= a_ticket_request.ticket_status %>
-            </td>
-
-            <td>
-              <%= a_ticket_request.ticket %>
-            </td>
-
-            <td>
-              <% if a_ticket_request.user == nil %>
-                <form action="/modify_ticket_request/<%= a_ticket_request.id %>"  method="post">
-                  <label for="user_email_box">
-                    User Email
-                  </label>
-                  <input type="text" id="user_email_box" name="query_user_email">
-                  <button>
-                    Assign Ticket
-                  </button>
-                </form>
-              <% else %>
-                <%= a_ticket_request.user.email %>
-              <%end%>
-            </td>
-
-            <td>
-              <a href="/ticket_requests/<%= a_ticket_request.id %>">
-                Show details
-              </a>
-            </td>
-          </tr>
+              <td>
+                <a href="/ticket_requests/<%= a_ticket_request.id %>">
+                  Show details
+                </a>
+              </td>
+            </tr>
+          <% end %>
         <% end %>
-      <% end %>
-    </table>
+      </table>
+    </div>
   </div>
-</div>
 
-<%= @user_group_tickets %>
+  <%= @user_group_tickets %>
 
-<hr>
+  <hr>
+<% else %>
+  <div>
+    Must be an admin
+  </div>
+<% end %>
