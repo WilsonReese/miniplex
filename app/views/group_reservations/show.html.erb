@@ -1,3 +1,5 @@
+<% if TicketRequest.where({ :group_id => @the_group_reservation.id }).exists?({ :user_id => @current_user }) %>
+
 <div>
   <div>
     <h1>
@@ -68,29 +70,110 @@ But then once the reservation is confirmed, it needs to just show the reservatio
       </dd>
     </dl>
     
-    <div>
-      <form action="/insert_ticket_request" method="post">
-        <div>
-          <label for="user_id_box" hidden>
-            User
-          </label>
+    <% if TicketRequest.where({ :group_id => @the_group_reservation.id }).first == nil %>
+      <div>
+        <form action="/insert_ticket_request" method="post">
+          <div>
+            <label for="user_id_box" hidden>
+              User
+            </label>
 
-          <input type="text" value="<%=@current_user.id%>" id="user_id_box" name="query_user_id" hidden>
-        </div>
+            <input type="text" value="<%=@current_user.id%>" id="user_id_box" name="query_user_id" hidden>
+          </div>
 
-        <div>
-          <label for="group_id_box" hidden>
-            Group
-          </label>
+          <div>
+            <label for="group_id_box" hidden>
+              Group
+            </label>
 
-          <input type="text" value="<%= @the_group_reservation.id %>" id="group_id_box" name="query_group_id" hidden>
-        </div>
+            <input type="text" value="<%= @the_group_reservation.id %>" id="group_id_box" name="query_group_id" hidden>
+          </div>
 
-        <button>
-          Get Tickets
-        </button>
-      </form>
-    </div>
+          <button>
+            Get Tickets
+          </button>
+        </form>
+      </div>
+    <% else %>
+      <div>
+        <table>
+          <tr>
+            <th>
+              ID
+            </th>
+
+            <th>
+              User
+            </th>
+
+            <th>
+              Group
+            </th>
+
+            <th>
+              Ticket status
+            </th>
+
+            <th>
+              Ticket
+            </th>
+
+            <th>
+              Assign Tickets
+            </th>
+
+            <th>
+            </th>
+          </tr>
+
+          <% @list_of_group_tickets.each do |a_ticket_request| %>
+            <tr>
+              <td>
+                <%= a_ticket_request.id %>
+              </td>
+
+              <td>
+                <%= a_ticket_request.user_id %>
+              </td>
+
+              <td>
+                <%= a_ticket_request.group_id %>
+              </td>
+
+              <td>
+                <%= a_ticket_request.ticket_status %>
+              </td>
+
+              <td>
+                <%= a_ticket_request.ticket %>
+              </td>
+
+              <td>
+                <% if a_ticket_request.user == nil %>
+                  <form action="/modify_ticket_request/<%= a_ticket_request.id %>"  method="post">
+                    <label for="user_email_box">
+                      User Email
+                    </label>
+                    <input type="text" id="user_email_box" name="query_user_email">
+                    <button>
+                      Assign Ticket
+                    </button>
+                  </form>
+                <% else %>
+                  <%= a_ticket_request.user.email %>
+                <%end%>
+              </td>
+
+              <td>
+                <a href="/ticket_requests/<%= a_ticket_request.id %>">
+                  Show details
+                </a>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+    <% end %>
   </div>
 </div>
 
@@ -168,3 +251,7 @@ But then once the reservation is confirmed, it needs to just show the reservatio
 </div>
 
 <hr>
+<% else %>
+  <div>You are not allowed on this page.</div>
+  <div><a href="/">Back to Home</a></div>
+<% end %>

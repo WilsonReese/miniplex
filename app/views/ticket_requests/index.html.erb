@@ -88,52 +88,57 @@
       </tr>
 
       <% @list_of_ticket_requests.each do |a_ticket_request| %>
-      <tr>
-        <td>
-          <%= a_ticket_request.id %>
-        </td>
+        <% the_group_reservation = GroupReservation.where({ :id => a_ticket_request.group_id }).first %>
+        <% if a_ticket_request.group_id == the_group_reservation.id %>
+          <tr>
+            <td>
+              <%= a_ticket_request.id %>
+            </td>
 
-        <td>
-          <%= a_ticket_request.user_id %>
-        </td>
+            <td>
+              <%= a_ticket_request.user_id %>
+            </td>
 
-        <td>
-          <%= a_ticket_request.group_id %>
-        </td>
+            <td>
+              <%= a_ticket_request.group_id %>
+            </td>
 
-        <td>
-          <%= a_ticket_request.ticket_status %>
-        </td>
+            <td>
+              <%= a_ticket_request.ticket_status %>
+            </td>
 
-        <td>
-          <%= a_ticket_request.ticket %>
-        </td>
+            <td>
+              <%= a_ticket_request.ticket %>
+            </td>
 
-        <td>
-          <% if a_ticket_request.user == nil %>
-            <form action="/modify_ticket_request/<%= a_ticket_request.id %>"  method="post">
-              <label for="user_email_box">
-                User Email
-              </label>
-              <input type="text" id="user_email_box" name="query_user_email">
-              <button>
-                Assign Ticket
-              </button>
-            </form>
-          <% else %>
-            <%= a_ticket_request.user.email %>
-          <%end%>
-        </td>
+            <td>
+              <% if a_ticket_request.user == nil %>
+                <form action="/modify_ticket_request/<%= a_ticket_request.id %>"  method="post">
+                  <label for="user_email_box">
+                    User Email
+                  </label>
+                  <input type="text" id="user_email_box" name="query_user_email">
+                  <button>
+                    Assign Ticket
+                  </button>
+                </form>
+              <% else %>
+                <%= a_ticket_request.user.email %>
+              <%end%>
+            </td>
 
-        <td>
-          <a href="/ticket_requests/<%= a_ticket_request.id %>">
-            Show details
-          </a>
-        </td>
-      </tr>
+            <td>
+              <a href="/ticket_requests/<%= a_ticket_request.id %>">
+                Show details
+              </a>
+            </td>
+          </tr>
+        <% end %>
       <% end %>
     </table>
   </div>
 </div>
+
+<%= @user_group_tickets %>
 
 <hr>

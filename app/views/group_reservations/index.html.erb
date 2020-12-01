@@ -114,43 +114,45 @@
           </th>
         </tr>
         <% @list_of_group_reservations.each do |a_group_reservation| %>
-          <tr>
-            <td>
-              <%= a_group_reservation.id %>
-            </td>
-            <td>
-              <%= a_group_reservation.reservation_status %>
-            </td>
-            <td>
-              <%= a_group_reservation.reservation_date %>
-            </td>
-            <td>
-              <%= a_group_reservation.reservation_time %>
-            </td>
-            <td>
-              <%= a_group_reservation.reservation_duration %>
-            </td>
-            <td>
-              <%= a_group_reservation.number_of_tickets %>
-            </td>
-            <td>
-              <%= a_group_reservation.movie_id %>
-            </td>
-            <td>
-              <%= a_group_reservation.theater_id %>
-            </td>
-            <td>
-              <%= time_ago_in_words(a_group_reservation.created_at) %> ago
-            </td>
-            <td>
-              <%= time_ago_in_words(a_group_reservation.updated_at) %> ago
-            </td>
-            <td>
-              <a href="/group_reservations/<%= a_group_reservation.id %>">
-                Show details
-              </a>
-            </td>
-          </tr>
+          <% if TicketRequest.where({ :group_id => a_group_reservation.id }).exists?({ :user_id => @current_user }) %>
+            <tr>
+              <td>
+                <%= a_group_reservation.id %>
+              </td>
+              <td>
+                <%= a_group_reservation.reservation_status %>
+              </td>
+              <td>
+                <%= a_group_reservation.reservation_date %>
+              </td>
+              <td>
+                <%= a_group_reservation.reservation_time %>
+              </td>
+              <td>
+                <%= a_group_reservation.reservation_duration %>
+              </td>
+              <td>
+                <%= a_group_reservation.number_of_tickets %>
+              </td>
+              <td>
+                <%= a_group_reservation.movie_id %>
+              </td>
+              <td>
+                <%= a_group_reservation.theater_id %>
+              </td>
+              <td>
+                <%= time_ago_in_words(a_group_reservation.created_at) %> ago
+              </td>
+              <td>
+                <%= time_ago_in_words(a_group_reservation.updated_at) %> ago
+              </td>
+              <td>
+                <a href="/group_reservations/<%= a_group_reservation.id %>">
+                  Show details
+                </a>
+              </td>
+            </tr>
+          <% end %>
         <% end %>
       </table>
     </div>

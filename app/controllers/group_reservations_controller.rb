@@ -14,6 +14,8 @@ class GroupReservationsController < ApplicationController
 
     @the_group_reservation = matching_group_reservations.at(0)
 
+    @list_of_group_tickets = TicketRequest.where({ :group_id => @the_group_reservation.id })
+
     render({ :template => "group_reservations/show.html.erb" })
   end
 

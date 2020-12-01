@@ -3,6 +3,9 @@ class TicketRequestsController < ApplicationController
     matching_ticket_requests = TicketRequest.all
 
     @list_of_ticket_requests = matching_ticket_requests.order({ :created_at => :desc })
+    
+    # the_group_reservation = GroupReservation.where({ :id => the_ticket_request.group_id }).first
+    # @user_group_tickets = @list_of_ticket_requests.where({ :group_id => the_group_reservation.id })
 
     render({ :template => "ticket_requests/index.html.erb" })
   end
