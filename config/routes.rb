@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post("/insert_ticket_request", { :controller => "ticket_requests", :action => "create" })
           
   # READ
+
   get("/ticket_requests", { :controller => "ticket_requests", :action => "index" })
   
   get("/ticket_requests/:path_id", { :controller => "ticket_requests", :action => "show" })
@@ -35,6 +36,8 @@ Rails.application.routes.draw do
   # UPDATE
   
   post("/modify_group_reservation/:path_id", { :controller => "group_reservations", :action => "update" })
+
+  get("/get_tickets/:path_id", { :controller => "group_reservations", :action => "add_tickets_to_reservations"})
   
   # DELETE
   get("/delete_group_reservation/:path_id", { :controller => "group_reservations", :action => "destroy" })

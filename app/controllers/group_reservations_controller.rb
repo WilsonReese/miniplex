@@ -19,6 +19,18 @@ class GroupReservationsController < ApplicationController
     render({ :template => "group_reservations/show.html.erb" })
   end
 
+  def add_tickets_to_reservations
+    the_id = params.fetch("path_id")
+
+    matching_group_reservations = GroupReservation.where({ :id => the_id })
+
+    @the_group_reservation = matching_group_reservations.at(0)
+
+    @list_of_group_tickets = TicketRequest.where({ :group_id => @the_group_reservation.id })
+
+    render({ :template => "group_reservations/get_tickets.html.erb" })
+  end
+
   def create
     #future coding changes: Theater.where({ :location_id => 1 }) <--- 1 needs to be changed to user_location
 
@@ -208,7 +220,6 @@ class GroupReservationsController < ApplicationController
     else
       redirect_to("/group_reservations", { :notice => "I messed something up" })
     end
-    
     
   end
 
