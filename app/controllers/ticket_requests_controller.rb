@@ -55,7 +55,7 @@ class TicketRequestsController < ApplicationController
     end
     the_group_reservation.reservation_status = "confirmed"
     the_group_reservation.save
-    redirect_to("/ticket_requests", { :notice => "Ticket requests created successfully." })
+    redirect_to("/group_reservations/#{the_group_reservation.id}", { :notice => "Ticket requests created successfully." })
   end
 
   def update

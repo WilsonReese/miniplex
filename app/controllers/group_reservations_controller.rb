@@ -211,7 +211,7 @@ class GroupReservationsController < ApplicationController
       
       if the_group_reservation.valid?
         the_group_reservation.save
-        redirect_to("/group_reservations/#{the_group_reservation.id}", { :notice => "Group reservation created successfully." })
+        redirect_to("/get_tickets/#{the_group_reservation.id}", { :notice => "The time and date you selected is availble. Please confirm the details" })
       else
         redirect_to("/group_reservations", { :notice => "Group reservation failed to create successfully." })
       end
