@@ -34,7 +34,7 @@ class TicketRequestsController < ApplicationController
     #need to get ticket from API
     
     # to get it to create the first ticket -> user_id is current user, group_id is from the reservation, status is assigned, and ticket is produced
-    the_ticket_request.ticket = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=miniplex#{the_ticket_request.id}"
+    the_ticket_request.ticket = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=miniplex#{the_group_reservation.id}x0"
     if the_group_reservation == nil
       redirect_to("/", { :alert => "Tickets failed to create successfully. Your session expired." })
     else
@@ -48,7 +48,7 @@ class TicketRequestsController < ApplicationController
         another_ticket_request = TicketRequest.new
         another_ticket_request.group_id = params.fetch("query_group_id")
         another_ticket_request.ticket_status = "unassigned"
-        another_ticket_request.ticket = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=miniplex#{the_ticket_request.id}"
+        another_ticket_request.ticket = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=miniplex#{the_group_reservation.id}x#{tickets_made}"
         if another_ticket_request.valid?
           another_ticket_request.save
         else

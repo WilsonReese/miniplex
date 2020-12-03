@@ -22,7 +22,7 @@
           <table>
             <tr>
               <th>
-                Ticket
+              
               </th>
 
               <th>
@@ -37,7 +37,7 @@
               <tr>
 
                 <td>
-                  <%= a_ticket_request.ticket %>
+                  <img src="<%= a_ticket_request.ticket %>" class="img-responsive">
                 </td>
 
                 <td>
@@ -60,6 +60,14 @@
                   <a href="/ticket_requests/<%= a_ticket_request.id %>">
                     View Ticket
                   </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
                 </td>
               </tr>
             <% end %>

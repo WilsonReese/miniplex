@@ -55,7 +55,8 @@ class GroupReservationsController < ApplicationController
     new_reservation_movie_end = new_reservation_datetime + movie_duration.minutes
     current_date = Date.today
     ct = Time.now.in_time_zone("Central Time (US & Canada)")
-    current_datetime = DateTime.new(current_date.year, current_date.month, current_date.day, ct.hour, ct.min, ct.sec)
+    # current_datetime = DateTime.new(current_date.year, current_date.month, current_date.day, ct.hour, ct.min, ct.sec)
+    current_datetime = DateTime.now - 6.hours
     
     #need to remove this
     new_res_duration = movie_duration
@@ -152,7 +153,7 @@ class GroupReservationsController < ApplicationController
         redirect_to("/group_reservations", { :notice => "Group reservation failed to create successfully." })
       end
     elsif the_group_reservation.reservation_status == "failed"
-      redirect_to("/group_reservations", { :alert => error_message })
+      redirect_to("/movies/#{res_target_movie_id}", { :alert => error_message })
     else
       redirect_to("/group_reservations", { :notice => "I messed something up" })
     end

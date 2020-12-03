@@ -6,7 +6,7 @@
     <div>
       <div>
         <h1>
-          Ticket details
+          Ticket Details
         </h1>
 
         <div>
@@ -22,10 +22,9 @@
         <div>
           <dl>
             <dt>
-              Ticket
             </dt>
             <dd>
-              <%= @the_ticket_request.ticket %>
+              <img src="<%= @the_ticket_request.ticket %>" class="img-responsive">
             </dd>
 
             <dt>
@@ -86,8 +85,13 @@
             <label for="user_email_box">
               Email
             </label>
-            
-            <input type="text" id="user_email_box" name="query_user_email" value="<%= @the_ticket_request.user.email %>">
+
+            <input type="text" id="user_email_box" name="query_user_email" 
+              <% if @the_ticket_request.user != nil %>
+                value="<%= @the_ticket_request.user.email %>">
+              <% else %>
+                >
+              <% end %>
           </div>
 
           <button>
