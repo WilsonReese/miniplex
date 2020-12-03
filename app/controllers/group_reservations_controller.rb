@@ -2,7 +2,7 @@ class GroupReservationsController < ApplicationController
   def index
     matching_group_reservations = GroupReservation.all
 
-    @list_of_group_reservations = matching_group_reservations.order({ :created_at => :desc })
+    @list_of_group_reservations = matching_group_reservations.order({ :reservation_date => :asc }).order({ :reservation_time => :asc })
 
     render({ :template => "group_reservations/index.html.erb" })
   end
@@ -33,7 +33,6 @@ class GroupReservationsController < ApplicationController
 
   def create
     #future coding changes: Theater.where({ :location_id => 1 }) <--- 1 needs to be changed to user_location
-    
     the_group_reservation = GroupReservation.new
     #status defaults to requested, not a user input
     the_group_reservation.reservation_status = "requested"

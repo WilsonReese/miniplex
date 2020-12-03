@@ -32,7 +32,9 @@
               Ticket Holder
             </dt>
             <dd>
-              <%= @the_ticket_request.user.email %>
+              <% if @the_ticket_request.user != nil %>
+                <%= @the_ticket_request.user.email %>
+              <% end %>
             </dd>
 
             <dt>
@@ -55,6 +57,15 @@
             <dd>
               <%= (the_group_reservation.reservation_time + 6.hours).strftime("%l:%M %p") %>
             </dd>
+
+            <dt>
+              Location
+            </dt>
+            <dd>
+              <%= the_group_reservation.theater.location.location_name %>:
+              <%= the_group_reservation.theater.location.street_address %>
+            </dd>
+
           </dl>
         </div>
       </div>

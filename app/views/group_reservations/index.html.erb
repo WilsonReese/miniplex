@@ -13,83 +13,116 @@
   
   <div>
     <div>
-      <table>
-        <tr>
-          <th>
-            ID
-          </th>
-          <th>
-            Reservation status
-          </th>
-          <th>
-            Reservation date
-          </th>
-          <th>
-            Reservation time
-          </th>
-          <th>
-            Reservation duration
-          </th>
-          <th>
-            Number of tickets
-          </th>
-          <th>
-            Movie
-          </th>
-          <th>
-            Theater
-          </th>
-          <th>
-            Created at
-          </th>
-          <th>
-            Updated at
-          </th>
-          <th>
-          </th>
-        </tr>
-        <% @list_of_group_reservations.each do |a_group_reservation| %>
-          <% if TicketRequest.where({ :group_id => a_group_reservation.id }).exists?({ :user_id => @current_user }) %>
+      <% if @current_user.ticket_requests.first == nil %>
+        You have not made any reservations yet.
+      <% else %>
+        <h2>
+          Upcoming Reservations
+        </h2>
+        <% if @current_user.groups.exists?({ :reservation_status => "confirmed" }) %>
+          <table>
             <tr>
-              <td>
-                <%= a_group_reservation.id %>
-              </td>
-              <td>
-                <%= a_group_reservation.reservation_status %>
-              </td>
-              <td>
-                <%= a_group_reservation.reservation_date %>
-              </td>
-              <td>
-                <%= a_group_reservation.reservation_time %>
-              </td>
-              <td>
-                <%= a_group_reservation.reservation_duration %>
-              </td>
-              <td>
-                <%= a_group_reservation.number_of_tickets %>
-              </td>
-              <td>
-                <%= a_group_reservation.movie_id %>
-              </td>
-              <td>
-                <%= a_group_reservation.theater_id %>
-              </td>
-              <td>
-                <%= time_ago_in_words(a_group_reservation.created_at) %> ago
-              </td>
-              <td>
-                <%= time_ago_in_words(a_group_reservation.updated_at) %> ago
-              </td>
-              <td>
-                <a href="/group_reservations/<%= a_group_reservation.id %>">
-                  Show details
-                </a>
-              </td>
+              <th>
+                Reservation status
+              </th>
+              <th>
+                Date
+              </th>
+              <th>
+                Start Time
+              </th>
+              <th>
+                Movie
+              </th>
+              <th>
+              </th>
             </tr>
-          <% end %>
+            <% upcoming_counter = 0 %>
+            <% @list_of_group_reservations.each do |a_group_reservation| %>
+              <% if TicketRequest.where({ :group_id => a_group_reservation.id }).exists?({ :user_id => @current_user }) %>
+                <% if a_group_reservation.reservation_status == "confirmed" %>
+                  <tr>
+                    <td>
+                      <%= a_group_reservation.reservation_status %>
+                    </td>
+                    <td>
+                      <%= a_group_reservation.reservation_date.strftime("%B %e, %Y") %>
+                    </td>
+                    <td>
+                      <%= (a_group_reservation.reservation_time + 6.hours).strftime("%l:%M %p") %>
+                    </td>
+                    <td>
+                      <%= a_group_reservation.movie.title %>
+                    </td>
+                    <td>
+                      <a href="/group_reservations/<%= a_group_reservation.id %>">
+                        Reservation Details
+                      </a>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            <% end %>
+          </table>
+        <% else %>
+          You have no upcoming reservations.
         <% end %>
-      </table>
+
+        <hr>
+
+        <h2>
+          Past Reservations
+        </h2>
+        <% if @current_user.groups.exists?({ :reservation_status => "complete" }) %>
+          <table>
+            <tr>
+              <th>
+                Reservation status
+              </th>
+              <th>
+                Date
+              </th>
+              <th>
+                Start Time
+              </th>
+              <th>
+                Movie
+              </th>
+              <th>
+              </th>
+            </tr>
+            
+            <% @list_of_group_reservations.each do |a_group_reservation| %>
+              <% if TicketRequest.where({ :group_id => a_group_reservation.id }).exists?({ :user_id => @current_user }) %>
+                <% if a_group_reservation.reservation_status == "complete" %>
+                  <tr>
+                    <td>
+                      <%= a_group_reservation.reservation_status %>
+                    </td>
+                    <td>
+                      <%= a_group_reservation.reservation_date.strftime("%B %e, %Y") %>
+                    </td>
+                    <td>
+                      <%= (a_group_reservation.reservation_time + 6.hours).strftime("%l:%M %p") %>
+                    </td>
+                    <td>
+                      <%= a_group_reservation.movie.title %>
+                    </td>
+                    <td>
+                      <a href="/group_reservations/<%= a_group_reservation.id %>">
+                        Reservation Details
+                      </a>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            <% end %>
+          </table>
+        <% else %>
+          You have no past reservations. 
+        <% end %>
+
+      <% end %>
     </div>
   </div>
 <% end %>
