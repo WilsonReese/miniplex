@@ -208,10 +208,11 @@ class GroupReservationsController < ApplicationController
       the_group_reservation.reservation_time = res_target_time
       the_group_reservation.theater_id = new_res_theater
       the_group_reservation.movie_id = res_target_movie_id
+      the_group_reservation.host = @current_user.id
       
       if the_group_reservation.valid?
         the_group_reservation.save
-        redirect_to("/get_tickets/#{the_group_reservation.id}", { :notice => "The time and date you selected is availble. Please confirm the details" })
+        redirect_to("/get_tickets/#{the_group_reservation.id}", { :notice => "The time and date you selected is availble. Please confirm the details." })
       else
         redirect_to("/group_reservations", { :notice => "Group reservation failed to create successfully." })
       end

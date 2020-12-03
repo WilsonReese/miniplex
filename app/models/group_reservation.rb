@@ -3,6 +3,7 @@
 # Table name: group_reservations
 #
 #  id                   :integer          not null, primary key
+#  host                 :integer
 #  number_of_tickets    :integer
 #  reservation_date     :date
 #  reservation_duration :float
