@@ -22,27 +22,11 @@
           <table>
             <tr>
               <th>
-                ID
-              </th>
-
-              <th>
-                User
-              </th>
-
-              <th>
-                Group
-              </th>
-
-              <th>
-                Ticket status
-              </th>
-
-              <th>
                 Ticket
               </th>
 
               <th>
-                Assign Tickets
+                Ticket Holder
               </th>
 
               <th>
@@ -51,21 +35,6 @@
 
             <% @list_of_group_tickets.each do |a_ticket_request| %>
               <tr>
-                <td>
-                  <%= a_ticket_request.id %>
-                </td>
-
-                <td>
-                  <%= a_ticket_request.user_id %>
-                </td>
-
-                <td>
-                  <%= a_ticket_request.group_id %>
-                </td>
-
-                <td>
-                  <%= a_ticket_request.ticket_status %>
-                </td>
 
                 <td>
                   <%= a_ticket_request.ticket %>
@@ -74,7 +43,7 @@
                 <td>
                   <% if a_ticket_request.user == nil %>
                     <form action="/modify_ticket_request/<%= a_ticket_request.id %>"  method="post">
-                      <label for="user_email_box">
+                      <label for="user_email_box" hidden>
                         User Email
                       </label>
                       <input type="text" id="user_email_box" name="query_user_email">
@@ -89,7 +58,7 @@
 
                 <td>
                   <a href="/ticket_requests/<%= a_ticket_request.id %>">
-                    Show details
+                    View Ticket
                   </a>
                 </td>
               </tr>
@@ -179,67 +148,18 @@
           Group reservation #<%= @the_group_reservation.id %> details
         </h1>
 
+        <hr>
+
         <div>
           <div>
             <a href="/group_reservations">
               See all reservations
             </a>
           </div>
-
-          <div>
-            <a href="/delete_group_reservation/<%= @the_group_reservation.id %>">
-              Delete group reservation
-            </a>
-          </div>
         </div>
 
-        <dl>
-          <dt>
-            Movie
-          </dt>
-          <dd>
-            <img src="<%= @the_group_reservation.movie.image %>">
-          </dd>
-          <dd>
-            <%= @the_group_reservation.movie.title %>
-          </dd>
+        <hr>
 
-          <dt>
-            Reservation date
-          </dt>
-          <dd>
-            <%= @the_group_reservation.reservation_date.strftime("%A, %B %e, %Y") %>
-          </dd>
-
-          <dt>
-            Reservation Start Time
-          </dt>
-          <dd>
-            <%= (@the_group_reservation.reservation_time + 6.hours).strftime("%l:%M %p") %>
-          </dd>
-
-          <dt>
-            Reservation End Time
-          </dt>
-          <dd>
-            <%= (@the_group_reservation.reservation_end_time + 6.hours).strftime("%l:%M %p") %>
-          </dd>
-
-          <dt>
-            Number of tickets
-          </dt>
-          <dd>
-            <%= @the_group_reservation.number_of_tickets %>
-          </dd>
-
-          <dt>
-            Location Address
-          </dt>
-          <dd>
-            <%= @the_group_reservation.theater.location.street_address %>
-          </dd>
-        </dl>
-        
         <div>
           <table>
             <tr>
@@ -318,10 +238,73 @@
             <% end %>
           </table>
         </div>
+
+        <hr>
+        
+        <div>
+          <dl>
+            <dt>
+              Movie
+            </dt>
+            <dd>
+              <img src="<%= @the_group_reservation.movie.image %>">
+            </dd>
+            <dd>
+              <%= @the_group_reservation.movie.title %>
+            </dd>
+
+            <dt>
+              Reservation date
+            </dt>
+            <dd>
+              <%= @the_group_reservation.reservation_date.strftime("%A, %B %e, %Y") %>
+            </dd>
+
+            <dt>
+              Reservation Start Time
+            </dt>
+            <dd>
+              <%= (@the_group_reservation.reservation_time + 6.hours).strftime("%l:%M %p") %>
+            </dd>
+
+            <dt>
+              Reservation End Time
+            </dt>
+            <dd>
+              <%= (@the_group_reservation.reservation_end_time + 6.hours).strftime("%l:%M %p") %>
+            </dd>
+
+            <dt>
+              Number of tickets
+            </dt>
+            <dd>
+              <%= @the_group_reservation.number_of_tickets %>
+            </dd>
+
+            <dt>
+              Location Address
+            </dt>
+            <dd>
+              <%= @the_group_reservation.theater.location.street_address %>
+            </dd>
+          </dl>
+        </div>
+
+        <hr>
+
+        <div>
+          <div>
+            <a href="/delete_group_reservation/<%= @the_group_reservation.id %>">
+              Cancel group reservation
+            </a>
+          </div>
+        </div>
+
+        <hr>
+
       </div>
     </div>
 
-    <hr>
 
   <% else %>
     <div>You do not have access to this page.</div>

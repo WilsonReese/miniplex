@@ -1,71 +1,62 @@
 <% if @current_user == nil %>
   <h4>Please <a href="/user_sign_in">sign in</a> first.</h4>
 <% else %>
-  <% gr = GroupReservation.where({ :id => @the_ticket_request.group_id }).first %>
-  <% if TicketRequest.where({ :group_id => gr.id }).exists?({ :user_id => @current_user.id }) %>
+  <% the_group_reservation = GroupReservation.where({ :id => @the_ticket_request.group_id }).first %>
+  <% if TicketRequest.where({ :group_id => the_group_reservation.id }).exists?({ :user_id => @current_user.id }) %>
     <div>
       <div>
         <h1>
-          Ticket request #<%= @the_ticket_request.id %> details
+          Ticket details
         </h1>
 
         <div>
           <div>
-            <a href="/ticket_requests">
+            <a href="/group_reservations/<%= the_group_reservation.id %>">
               Go back
-            </a>
-          </div>
-
-          <div>
-            <a href="/delete_ticket_request/<%= @the_ticket_request.id %>">
-              Delete ticket request
             </a>
           </div>
         </div>
 
-        <dl>
-          <dt>
-            User
-          </dt>
-          <dd>
-            <%= @the_ticket_request.user_id %>
-          </dd>
+        <hr>
 
-          <dt>
-            Group
-          </dt>
-          <dd>
-            <%= @the_ticket_request.group_id %>
-          </dd>
+        <div>
+          <dl>
+            <dt>
+              Ticket
+            </dt>
+            <dd>
+              <%= @the_ticket_request.ticket %>
+            </dd>
 
-          <dt>
-            Ticket status
-          </dt>
-          <dd>
-            <%= @the_ticket_request.ticket_status %>
-          </dd>
+            <dt>
+              Ticket Holder
+            </dt>
+            <dd>
+              <%= @the_ticket_request.user.email %>
+            </dd>
 
-          <dt>
-            Ticket
-          </dt>
-          <dd>
-            <%= @the_ticket_request.ticket %>
-          </dd>
+            <dt>
+              Movie
+            </dt>
+            <dd>
+              <%= the_group_reservation.movie.title %>
+            </dd>
 
-          <dt>
-            Created at
-          </dt>
-          <dd>
-            <%= time_ago_in_words(@the_ticket_request.created_at) %> ago
-          </dd>
+            <dt>
+              Reservation Date
+            </dt>
+            <dd>
+              <%= the_group_reservation.reservation_date.strftime("%A, %B %e, %Y") %>
+            </dd>
 
-          <dt>
-            Updated at
-          </dt>
-          <dd>
-            <%= time_ago_in_words(@the_ticket_request.updated_at) %> ago
-          </dd>
-        </dl>
+            <dt>
+              Reservation Time
+            </dt>
+            <dd>
+              <%= (the_group_reservation.reservation_time + 6.hours).strftime("%l:%M %p") %>
+            </dd>
+          </dl>
+        </div>
       </div>
     </div>
 
@@ -75,44 +66,21 @@
     <div>
       <div>
         <h2>
-          Edit ticket request
+          Change Ticket Holder
         </h2>
 
         <form action="/modify_ticket_request/<%= @the_ticket_request.id %>"  method="post" >
-          <div>
-            <label for="user_id_box">
-              User
-            </label>
-
-            <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_ticket_request.user_id %>">
-          </div>
 
           <div>
-            <label for="group_id_box">
-              Group
+            <label for="user_email_box">
+              Email
             </label>
-
-            <input type="text" id="group_id_box" name="query_group_id" value="<%= @the_ticket_request.group_id %>">
-          </div>
-
-          <div>
-            <label for="ticket_status_box">
-              Ticket status
-            </label>
-
-            <input type="text" id="ticket_status_box" name="query_ticket_status" value="<%= @the_ticket_request.ticket_status %>">
-          </div>
-
-          <div>
-            <label for="ticket_box">
-              Ticket
-            </label>
-
-            <input type="text" id="ticket_box" name="query_ticket" value="<%= @the_ticket_request.ticket %>">
+            
+            <input type="text" id="user_email_box" name="query_user_email" value="<%= @the_ticket_request.user.email %>">
           </div>
 
           <button>
-            Update ticket request
+            Reassign Ticket
           </button>
         </form>
       </div>
