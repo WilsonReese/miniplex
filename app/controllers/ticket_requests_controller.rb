@@ -36,7 +36,7 @@ class TicketRequestsController < ApplicationController
     # to get it to create the first ticket -> user_id is current user, group_id is from the reservation, status is assigned, and ticket is produced
     the_ticket_request.ticket = "QR CODE FOR FIRST TICKET"
     if the_group_reservation == nil
-      redirect_to("/", { :alert => "Tickets failed to create successfully. Your session had expired." })
+      redirect_to("/", { :alert => "Tickets failed to create successfully. Your session expired." })
     else
       if the_ticket_request.valid?
         the_ticket_request.save
@@ -58,7 +58,7 @@ class TicketRequestsController < ApplicationController
       end
       the_group_reservation.reservation_status = "confirmed"
       the_group_reservation.save
-      redirect_to("/group_reservations/#{the_group_reservation.id}", { :notice => "Ticket requests created successfully." })
+      redirect_to("/group_reservations/#{the_group_reservation.id}", { :notice => "We're happy to have you! Here are your tickets." })
     end 
   end
 
