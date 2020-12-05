@@ -20,7 +20,8 @@ class TheatersController < ApplicationController
   def create
     the_theater = Theater.new
     the_theater.seats_in_theater = params.fetch("query_seats_in_theater")
-    the_theater.location_id = params.fetch("query_location_id")
+    the_theater_location = params.fetch("query_location_name")
+    the_theater.location_id = Location.where({ :location_name => the_theater_location }).first.id
     the_theater.turnover_time = params.fetch("query_turnover_time")
 
     if the_theater.valid?
@@ -36,7 +37,8 @@ class TheatersController < ApplicationController
     the_theater = Theater.where({ :id => the_id }).at(0)
 
     the_theater.seats_in_theater = params.fetch("query_seats_in_theater")
-    the_theater.location_id = params.fetch("query_location_id")
+    the_theater_location = params.fetch("query_location_name")
+    the_theater.location_id = Location.where({ :location_name => the_theater_location }).first.id
     the_theater.turnover_time = params.fetch("query_turnover_time")
 
     if the_theater.valid?

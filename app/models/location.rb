@@ -15,4 +15,6 @@ class Location < ApplicationRecord
 
   validates(:open_time, { :presence => true })
   validates(:close_time, { :presence => true })
+  validates(:location_name, { :presence => true })
+  validates(:location_name, { :uniqueness => true })
 end
