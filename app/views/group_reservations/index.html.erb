@@ -23,9 +23,6 @@
           <table>
             <tr>
               <th>
-                Reservation status
-              </th>
-              <th>
                 Date
               </th>
               <th>
@@ -42,9 +39,6 @@
               <% if TicketRequest.where({ :group_id => a_group_reservation.id }).exists?({ :user_id => @current_user }) %>
                 <% if a_group_reservation.reservation_status == "confirmed" %>
                   <tr>
-                    <td>
-                      <%= a_group_reservation.reservation_status %>
-                    </td>
                     <td>
                       <%= a_group_reservation.reservation_date.strftime("%B %e, %Y") %>
                     </td>
@@ -77,9 +71,6 @@
           <table>
             <tr>
               <th>
-                Reservation status
-              </th>
-              <th>
                 Date
               </th>
               <th>
@@ -96,9 +87,6 @@
               <% if TicketRequest.where({ :group_id => a_group_reservation.id }).exists?({ :user_id => @current_user }) %>
                 <% if a_group_reservation.reservation_status == "complete" %>
                   <tr>
-                    <td>
-                      <%= a_group_reservation.reservation_status %>
-                    </td>
                     <td>
                       <%= a_group_reservation.reservation_date.strftime("%B %e, %Y") %>
                     </td>
