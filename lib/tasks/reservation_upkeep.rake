@@ -25,3 +25,7 @@ task({ :complete_reservations => :environment }) do
     end
   end 
 end 
+
+task({ :delete_all_reservations => :environment }) do
+  GroupReservation.destroy_all
+end
