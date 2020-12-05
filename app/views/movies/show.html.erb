@@ -1,11 +1,13 @@
 <div>
   <div>
     <h1>
-      Movie #<%= @the_movie.id %> details
+      <%= @the_movie.title %>
     </h1>
 
     <hr>
     <% if @current_user == nil %>
+      <a href="/user_sign_in">Sign in</a> to make a reservation
+      <hr>
     <% else%>
       <div>
         <div>
@@ -90,9 +92,6 @@
       <dt>
         <img src="<%= @the_movie.image %>">
       </dt>
-      <dt>
-        Title
-      </dt>
       <dd>
         <%= @the_movie.title %>
       </dd>
@@ -111,26 +110,6 @@
         <%= @the_movie.description %>
       </dd>
 
-      <dt>
-        Currently showing
-      </dt>
-      <dd>
-        <%= @the_movie.currently_showing %>
-      </dd>
-
-      <dt>
-        Created at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_movie.created_at) %> ago
-      </dd>
-
-      <dt>
-        Updated at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_movie.updated_at) %> ago
-      </dd>
     </dl>
   </div>
 </div>
